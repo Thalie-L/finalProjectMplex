@@ -1,4 +1,5 @@
 import React,{useState} from "react";
+import styled from "styled-components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import GlobalStyle from "./component/GlobalStyles";
 import { Sidebar } from "./component/Sidebar";
@@ -41,11 +42,8 @@ const App = () => {
         <Login />
        
         {role==="Admin" &&  <Sidebar /> }
-        {isAuthenticated && (
-        <div style={{"margin-right":"100px"}}>
-          {user.name}-{user.email}
-        </div>
-      )}
+        <Sidebar />
+      
         <Switch>
           <Route exact path="/"></Route>
           <Route path="/buildings">
@@ -68,3 +66,9 @@ const App = () => {
 //  <Sidebar /> <h1>New app Mplex</h1>
 
 export default App;
+
+const Wrapper = styled.div`
+ 
+ height: 100%;
+ width: 100%;
+`;

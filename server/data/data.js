@@ -1,6 +1,8 @@
 const buildings = [
   {
     _id: "Building1",
+    desc: "Building in Anjou area",
+    status: "active",
     idOwner: "1000",
   },
 ];
@@ -25,19 +27,17 @@ const lodgings = [
 const address = [
   {
     _id: "88a33c23-3332-4ef2-bd71-be7a6430485a",
-    civicNumber: "8485",
-    streetName: "Chardonnet avenue",
-    appartmentNumber: "",
-    town: "Montreal (Anjou)",
-    postalCode: "H1K 1B8",
+    address: "8485 Chardonnet avenue",
+    city: "Montreal (Anjou)",
+    province: "QC",
+    postcode: "H1K 1B8",
   },
   {
     _id: "88a33c23-3332-4ef2-bd71-be7a6430485b",
-    civicNumber: "8487",
-    streetName: "Chardonnet avenue",
-    appartmentNumber: "",
-    town: "Montreal (Anjou)",
-    postalCode: "H1K 1B8",
+    address: "8487 Chardonnet avenue",
+    city: "Montreal (Anjou)",
+    province: "QC",
+    postcode: "H1K 1B8",
   },
 ];
 
@@ -69,4 +69,4 @@ const users = [
   },
 ];
 
-module.exports = { buildings, lodgings,address, pictures,users };
+module.exports = { buildings, lodgings, address, pictures, users };

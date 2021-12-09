@@ -2,14 +2,14 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 
 const Button = ({ handleClick, disabled, subStatus }) => (
-  <Wrapper disabled={disabled} onClick={handleClick}>
+  <Wrapper onClick={handleClick}>
     {subStatus === "pending" && (
       <Loading>
         <div></div>
         <div></div>
       </Loading>
     )}
-    {subStatus === "idle" && <span class="button-label">Submit</span>}
+    <span class="button-label">Submit</span>
   </Wrapper>
 );
 

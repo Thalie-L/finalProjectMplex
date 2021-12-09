@@ -170,7 +170,7 @@ const Wrapper = styled.div`
   height: 100%;
   width: 250px;
   background-color: #2F4050;
-  position: fixed;  
+ position: fixed;  
 `;
 
 const Img = styled.img`

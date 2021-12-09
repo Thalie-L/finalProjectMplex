@@ -4,10 +4,13 @@ import { MdOutlineLogin } from "react-icons/md";
 import { MdLogout} from "react-icons/md";
 import { Home } from "./Home";
 import {LoginButton} from "./LoginButton";
-import LogoutButton from "./LogoutButton"
+import LogoutButton from "./LogoutButton";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 export const Login = () => {
+    const { user, isAuthenticated, isLoading } = useAuth0();
+
   return (
       <>
     <Wrapper>
@@ -17,6 +20,13 @@ export const Login = () => {
        
    
     </DivImg>
+    <User>
+    {isAuthenticated && (
+        <div style={{"margin-right":"100px"}}>
+          {user.name}-{user.email}
+        </div>
+      )}
+      </User> 
     <LoginButton/>
     <LogoutButton/>
          <Title>Log in</Title>
@@ -30,14 +40,22 @@ export const Login = () => {
 };
 
 const Wrapper = styled.div`
- 
+
  height: 80px;
+ width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   background-color: #2F4050;
   border-bottom: 2px solid black;
+`;
+
+const User = styled.div `
+
+font-size: 22px;
+margin-right: 1%;
+color:white;
 `;
 
 const Title = styled.div `
