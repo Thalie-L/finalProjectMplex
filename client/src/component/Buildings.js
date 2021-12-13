@@ -39,6 +39,11 @@ export const Buildings = () => {
   const { currentUser, setCurrentUser, role, setRole } =
     React.useContext(CurrentUserContext);
 
+    React.useEffect(() => {
+     setOption("ADD");
+    }, []);
+
+   
   const handleClickAdd = () => {
     console.log("click add");
     setOption("ADD");
@@ -52,36 +57,7 @@ export const Buildings = () => {
 
   const handleClickAddConfirm = (ev) => {
     ev.preventDefault();
-    //setSubStatus("pending");
-
- /*   const building = {
-      _id: initialState.buildingName,
-      desc: initialState.buildingDesc,
-      status: "active",
-      idOwner: currentUser._id,
-    };
-
-    fetch("/api/building", {
-      method: "POST",
-      body: JSON.stringify(building),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        const { status, error } = json;
-        if (status === "success") {
-          //setSubStatus("confirmed");
-          console.log("success");
-        } else if (error) {
-          console.log("error:", error);
-          // setSubStatus("error");
-          // setErrMessage(errorMessages[error]);
-        }
-      });
-*/
+   
     formData.idOwner = currentUser._id;
     
       fetch("/api/lodging/", {

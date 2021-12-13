@@ -15,7 +15,7 @@ const Button = ({ handleClick, disabled, subStatus }) => (
 
 const Wrapper = styled.button`
   position: relative;
-  background: #363292;
+  background: #006bb6;//#363292;
   border-color: transparent;
   border-radius: 4px;
   color: #fff;

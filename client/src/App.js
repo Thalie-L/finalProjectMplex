@@ -14,6 +14,7 @@ import { TenantDetails } from "./component/TenantDetails";
 import { TenantNew } from "./component/TenantNew";
 import { Profile } from "./component/Profile";
 import { Home } from "./component/Home";
+import { Payments } from "./component/Payments";
 
 
 const App = () => {
@@ -64,7 +65,9 @@ const App = () => {
           <Route path="/tenants">
             <Tenants />
           </Route>         
-          <Route path="/payments"></Route>
+          <Route path="/payments">
+            <Payments/>
+          </Route>
           <Route path="/leases"></Route>
           <Route path="/requests"></Route>
           <Route path="/screenerror"></Route>

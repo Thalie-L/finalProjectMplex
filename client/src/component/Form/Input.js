@@ -19,11 +19,9 @@ const Wrapper = styled.div`
   margin-bottom: 6px;
   width: 100%;
   position: relative;
-
   label {
     display: none;
   }
-
   input {
     border-radius: 3px;
     border: 1px solid #e4e8eb;
@@ -34,7 +32,6 @@ const Wrapper = styled.div`
     height: 36px;
     padding: 8px 12px 10px 12px;
     width: 100%;
-
     &::placeholder {
       color: #999;
     }

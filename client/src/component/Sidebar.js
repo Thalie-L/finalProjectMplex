@@ -125,22 +125,7 @@ export const Sidebar = () => {
           </Menu>
         </NavLink>
 
-        <NavLink
-          to="/Requests"
-          exact
-          activeStyle={{
-            fontWeight: "bold",
-            color: "purple",
-          }}
-          style={linkStyle}
-        >
-          <Menu>
-            <Icon>
-              <BsBookmark size={32} />
-            </Icon>
-            <Span>Requests</Span>
-          </Menu>
-        </NavLink>
+       
 
         <NavLink
           to="/payments"
@@ -156,6 +141,23 @@ export const Sidebar = () => {
               <BiDollarCircle size={32} />
             </Icon>
             <Span>Payments</Span>
+          </Menu>
+        </NavLink>
+
+        <NavLink
+          to="/Requests"
+          exact
+          activeStyle={{
+            fontWeight: "bold",
+            color: "purple",
+          }}
+          style={linkStyle}
+        >
+          <Menu>
+            <Icon>
+              <BsBookmark size={32} />
+            </Icon>
+            <Span>Requests</Span>
           </Menu>
         </NavLink>
         {role === "Admin" && (

@@ -16,6 +16,11 @@ const {
   updateAddress,
   getPictures,
   addPictures,
+  getLeaseById,
+  addLeases,
+  getPaymentByTenantId,
+  addPayments,
+  getLatePayments,
 } = require("./handlers");
 
 const path = require("path");
@@ -95,6 +100,25 @@ express()
 
   //create a new pictures 
   .post("/api/pictures/", addPictures)
+
+   /////////////////////////////////////////////////////////
+
+   //retrieve lease for specific tenant    
+    .get("/api/lease", getLeaseById)
+
+  //create a new lease 
+  .post("/api/leases/", addLeases)
+
+  /////////////////////////////////////////////////////////
+
+  //retrieve payment for specific tenant    
+  .get("/api/payment", getPaymentByTenantId)
+
+//create a new payment
+.post("/api/payments/", addPayments)
+
+//retrieve all tenant informations that as late payment  ex: ?idOwner=1000&month=11
+.get("/api/payment/tenants", getLatePayments)
 
   .listen(PORT, function () {
     console.info("🌍 Listening on port " + PORT);

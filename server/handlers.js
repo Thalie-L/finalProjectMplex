@@ -654,6 +654,7 @@ const updateAddress = async (req, res) => {
     console.log(err.stack);
   }
 };
+////////////////////////////////////////////////////////////////
 
 const getPictures = async (req, res) => {
   const { idLodging } = req.query; //req.params._id;
@@ -669,13 +670,19 @@ const getPictures = async (req, res) => {
     console.log("connected!");
 
     let result = await db.collection("pictures").find({ idLodging }).toArray();
-     if(result) {res.status(200).json({ status: 200, idLodging, data: result, message: {} })}
-      else{
-            res.status(404)
-            .json({ status: 404, idLodging, data: undefined, message: "Not Found" });
-      }     
-      client.close();
-    
+    if (result) {
+      res
+        .status(200)
+        .json({ status: 200, idLodging, data: result, message: {} });
+    } else {
+      res.status(404).json({
+        status: 404,
+        idLodging,
+        data: undefined,
+        message: "Not Found",
+      });
+    }
+    client.close();
 
     console.log("disconnected!");
   } catch (err) {
@@ -712,6 +719,203 @@ const addPictures = async (req, res) => {
   }
 };
 
+//////////////////////////////////////////////////////////////////
+const getLeaseById = async (req, res) => {
+  const { _id } = req.query; //req.params._id;
+  console.log(req.query);
+
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    db.collection("leases").findOne({ _id }, (err, result) => {
+      result
+        ? res.status(200).json({ status: 200, _id, data: result, message: {} })
+        : res
+            .status(404)
+            .json({ status: 404, _id, data: undefined, message: "Not Found" });
+      client.close();
+    });
+
+    console.log("disconnected!");
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+const addLeases = async (req, res) => {
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    const result = await db.collection("leases").insertOne(req.body);
+
+    client.close();
+    console.log("disconnected!");
+
+    if (result) {
+      res
+        .status(201)
+        .json({ status: 201, data: req.body, message: "Lease added" });
+    } else {
+      res
+        .status(500)
+        .json({ status: 500, data: req.body, message: err.message });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+//////////////////////////////////////////////////////////////////
+const getPaymentByTenantId = async (req, res) => {
+  const { _id } = req.query; //req.params._id;
+  console.log(req.query);
+
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    db.collection("payments").findOne({ _id }, (err, result) => {
+      result
+        ? res.status(200).json({ status: 200, _id, data: result, message: {} })
+        : res
+            .status(404)
+            .json({ status: 404, _id, data: undefined, message: "Not Found" });
+      client.close();
+    });
+
+    console.log("disconnected!");
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+const addPayments = async (req, res) => {
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    const result = await db.collection("payments").insertOne(req.body);
+
+    client.close();
+    console.log("disconnected!");
+
+    if (result) {
+      res
+        .status(201)
+        .json({ status: 201, data: req.body, message: "Payment added" });
+    } else {
+      res
+        .status(500)
+        .json({ status: 500, data: req.body, message: err.message });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+const getLatePayments = async (req, res) => {
+  const { idOwner, month } = req.query; //req.params._id;
+  console.log(req.query);
+
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    const users = await db.collection("users").find({ idOwner }).toArray();
+    console.log("Users owner: ", users);
+
+    const userIds = users.map((user) => {
+      return user._id;
+    });
+    console.log("Users owner id only: ", userIds);
+
+    const payments = await db.collection("payments").find({ month }).toArray();
+    console.log("Users payments month december: ", payments);
+
+    const d = new Date();
+
+    const paymentMonth = await payments.map((pay) => {
+      let year = pay.datePayment.split("-")[0];
+      console.log("year", year);
+      console.log(pay.idUser);
+      console.log(month);
+      console.log(d.getMonth().toString());
+      console.log(d.getFullYear());
+      if (
+        userIds.includes(pay.idUser) &&
+        month === pay.month &&
+        year === d.getFullYear().toString()
+      ) {
+        return pay;
+      } else {
+        console.log("pas ok");
+        console.log(month === d.getMonth().toString());
+      }
+    });
+    console.log(
+      "Users payments month december/year2021/and users: ",
+      paymentMonth
+    );
+
+    const userIdsPaymentMonth = paymentMonth.map((pay) => {
+      return pay.idUser;
+    });
+    console.log("id only", userIdsPaymentMonth);
+
+    let result = users.map((user) => {
+      if (!user._id.includes(userIdsPaymentMonth)) {
+        console.log(user);
+        return user;
+      }
+    });
+    console.log("User late: ", result);
+    result = result.filter((r) => r !== undefined); //fix
+
+    if (result) {
+      res.status(200).json({ status: 200, idOwner, data: result, message: {} });
+    } else {
+      res
+        .status(404)
+        .json({ status: 404, idOwner, data: undefined, message: "Not Found" });
+    }
+
+    client.close();
+
+    console.log("disconnected!");
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+//////////////////////////////////////////////////////////////////
+
 module.exports = {
   getUser,
   getTenants,
@@ -729,4 +933,9 @@ module.exports = {
   updateAddress,
   getPictures,
   addPictures,
+  getLeaseById,
+  addLeases,
+  getPaymentByTenantId,
+  addPayments,
+  getLatePayments,
 };

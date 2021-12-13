@@ -42,5 +42,5 @@ export const Lodgings = () => {
 const Wrapper = styled.div`
   height: 830px;
   margin-left: 250px;
-  border: 2px solid red;
+
 `;

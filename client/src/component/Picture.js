@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Slideshow } from "./Slide";
 
 export const Picture = ({ lodging }) => {
   const [pictures, setPictures] = useState(null);
 
   React.useEffect(() => {
-    console.log("getting data pictures");   
+    console.log("getting data pictures");
     fetch(`/api/pictures?idLodging=${lodging._id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -21,17 +22,22 @@ export const Picture = ({ lodging }) => {
     <Wrapper>
       {pictures && (
         <>
+        <div> <span>Adresse: {lodging.lodgingAddress.address}, </span>
+        <span>{lodging.type}</span>
+          </div>
+          {pictures.map((picture) => {
+              return(<Img src={picture.imageUrl} />);
+            })}
          
-          <Img src={pictures[0].imageUrl} />
-          <span>{lodging.type}</span>-
-          <span>{lodging.lodgingAddress.address}</span>
         </>
       )}
     </Wrapper>
   );
 };
-
-const Wrapper = styled.div``;
+// <Slideshow pictures={pictures}/>
+const Wrapper = styled.div`
+margin-top: 50px;
+`;
 
 const Img = styled.img`
   height: 300px;
