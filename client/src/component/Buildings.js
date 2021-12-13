@@ -42,6 +42,7 @@ export const Buildings = () => {
   const handleClickAdd = () => {
     console.log("click add");
     setOption("ADD");
+    console.log(React.version);
   };
 
   const handleChangeAdd = (value, name) => {
@@ -113,8 +114,7 @@ export const Buildings = () => {
     <Wrapper>
       <Header>
         <Btn onClick={handleClickAdd}> Add Building</Btn>
-        <Btn>Update Building</Btn>
-        <Btn>Delete Building</Btn>
+        <Btn>Update Building</Btn>       
       </Header>
       {option === "ADD" && (
         <Main>
@@ -132,6 +132,7 @@ export const Buildings = () => {
 
 const Wrapper = styled.div`
   height: 830px;
+ 
 `;
 
 const Header = styled.div`
@@ -142,7 +143,7 @@ const Header = styled.div`
   align-items: center;
   height: 5%;
 
-  margin-left: 250px;
+  
 `;
 
 const Btn = styled.button`

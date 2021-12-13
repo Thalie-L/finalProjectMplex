@@ -77,6 +77,34 @@ const getTenants = async (req, res) => {
   }
 };
 
+const getTenantById = async (req, res) => {
+  const { _id } = req.query; //req.params._id;
+  console.log(req.query);
+
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    db.collection("users").findOne({ _id }, (err, result) => {
+      result
+        ? res.status(200).json({ status: 200, _id, data: result, message: {} })
+        : res
+            .status(404)
+            .json({ status: 404, _id, data: undefined, message: "Not Found" });
+      client.close();
+    });
+
+    console.log("disconnected!");
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
 const addTenants = async (req, res) => {
   // validation of email
   if (!req.body.email.includes("@")) {
@@ -284,7 +312,7 @@ const updateBuilding = async (req, res) => {
 /////////////////////////////////////////////////////////
 
 const getLodgings = async (req, res) => {
-  const { _id } = req.query; //req.params._id;
+  //const { _id } = req.query; //req.params._id;
 
   try {
     // creates a new client
@@ -295,18 +323,39 @@ const getLodgings = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-    db.collection("lodgings").find({ idBuilding: req.query }, (err, result) => {
-      result
-        ? res
-            .status(200)
-            .json({ status: 200, _id, data: result.seats, message: {} })
-        : res
-            .status(404)
-            .json({ status: 404, _id, data: undefined, message: "Not Found" });
-      client.close();
+    const lodgings = await db.collection("lodgings").find().toArray();
+    const addresses = await db.collection("address").find().toArray();
+    let result = [];
+
+    lodgings.forEach((lodging) => {
+      if (lodging.isAvailable === true) {
+        let address = addresses.filter((add) => add._id === lodging.idAddress);
+        let lodgingAddress = address[0];
+
+        result.push({
+          _id: lodging._id,
+          isAvailable: lodging.isAvailable,
+          type: lodging.type,
+          lodgingAddress,
+        });
+      }
     });
 
     console.log("disconnected!");
+
+    if (result) {
+      res.status(200).json({
+        status: 200,
+        data: result,
+        message: "Lodging and adress informations ",
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result,
+        message: "Lodging error",
+      });
+    }
   } catch (err) {
     console.log(err.stack);
   }
@@ -606,9 +655,67 @@ const updateAddress = async (req, res) => {
   }
 };
 
+const getPictures = async (req, res) => {
+  const { idLodging } = req.query; //req.params._id;
+  console.log(req.query);
+
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    let result = await db.collection("pictures").find({ idLodging }).toArray();
+     if(result) {res.status(200).json({ status: 200, idLodging, data: result, message: {} })}
+      else{
+            res.status(404)
+            .json({ status: 404, idLodging, data: undefined, message: "Not Found" });
+      }     
+      client.close();
+    
+
+    console.log("disconnected!");
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+const addPictures = async (req, res) => {
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    const result = await db.collection("pictures").insertOne(req.body);
+
+    client.close();
+    console.log("disconnected!");
+
+    if (result) {
+      res
+        .status(201)
+        .json({ status: 201, data: req.body, message: "Address added" });
+    } else {
+      res
+        .status(500)
+        .json({ status: 500, data: req.body, message: err.message });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
 module.exports = {
   getUser,
   getTenants,
+  getTenantById,
   addTenants,
   updateTenant,
   getBuildings,
@@ -620,4 +727,6 @@ module.exports = {
   getAddress,
   addAddress,
   updateAddress,
+  getPictures,
+  addPictures,
 };

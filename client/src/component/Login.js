@@ -22,25 +22,28 @@ export const Login = () => {
     </DivImg>
     <User>
     {isAuthenticated && (
-        <div style={{"margin-right":"100px"}}>
-          {user.name}-{user.email}
-        </div>
+        <Welcome style={{"margin-right":"100px"}}>
+          Welcome {user.name} 
+        </Welcome>
       )}
       </User> 
-    <LoginButton/>
-    <LogoutButton/>
-         <Title>Log in</Title>
-      <Icon>         
-        <MdOutlineLogin size={32}/>
-      </Icon>
+      {!isAuthenticated &&(<LoginButton/>)}
+    {isAuthenticated && (<LogoutButton/>)}
+        
     </Wrapper>
-    <Home/>
+    {!isAuthenticated && <Home/>}
     </>
   );
 };
-
+/*
+-{user.email}
+ <Title>Log in</Title>
+      <Icon>         
+        <MdOutlineLogin size={32}/>
+      </Icon>
+      */
 const Wrapper = styled.div`
-
+ 
  height: 80px;
  width: 100%;
   display: flex;
@@ -58,11 +61,16 @@ margin-right: 1%;
 color:white;
 `;
 
-const Title = styled.div `
-width: 70px;
+const Welcome = styled.div `
+width: 650px;
+display: flex;
+flex-direction: row;
+justify-content: center;
 font-size: 22px;
 margin-right: 1%;
 color:white;
+margin-left:30%;
+
 `;
 
 const Icon = styled.div `

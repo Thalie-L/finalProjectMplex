@@ -2,6 +2,7 @@
 const {
   getUser,
   getTenants,
+  getTenantById,
   addTenants,
   updateTenant,
   getBuildings,
@@ -13,6 +14,8 @@ const {
   getAddress,
   addAddress,
   updateAddress,
+  getPictures,
+  addPictures,
 } = require("./handlers");
 
 const path = require("path");
@@ -42,6 +45,9 @@ express()
 
   //retrieve all tenants of specific owner
   .get("/api/tenants", getTenants)
+
+  // get single tenant by id
+  .get("/api/tenant", getTenantById)
 
   //create a new building
   .post("/api/tenant/", addTenants)
@@ -83,6 +89,12 @@ express()
   .put("/api/adress/", updateAddress)
 
   /////////////////////////////////////////////////////////
+
+   //retrieve pictures from specific lodging
+   .get("/api/pictures", getPictures)
+
+  //create a new pictures 
+  .post("/api/pictures/", addPictures)
 
   .listen(PORT, function () {
     console.info("🌍 Listening on port " + PORT);
