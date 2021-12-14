@@ -976,22 +976,7 @@ const addRequests = async (req, res) => {
   }
 };
 
-//////////////////////////////////////////////////////////////////
-const sendMail = async (req, res,next) => {
-    let email = req.body.email;
-    let message =req.body.message;
-    let subject = req.body.subject;
-    let name = req.body.name;
 
-    const mailOptionss ={
-      from: name,
-      to: email,
-      subject:subject,
-      html:`${name}<noreply><br/>${message}`
-    }
-
-
-}
 //////////////////////////////////////////////////////////////////
 module.exports = {
   getUser,
