@@ -916,6 +916,83 @@ const getLatePayments = async (req, res) => {
 
 //////////////////////////////////////////////////////////////////
 
+const getRequests = async (req, res) => {
+ 
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    let result = await db.collection("requests").find().toArray();
+    if (result) {
+      res
+        .status(200)
+        .json({ status: 200,data: result, message: {} });
+    } else {
+      res.status(404).json({
+        status: 404,       
+        data: undefined,
+        message: "Not Found",
+      });
+    }
+    client.close();
+
+    console.log("disconnected!");
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+const addRequests = async (req, res) => {
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    const result = await db.collection("requests").insertOne(req.body);
+
+    client.close();
+    console.log("disconnected!");
+
+    if (result) {
+      res
+        .status(201)
+        .json({ status: 201, data: req.body, message: "Request added" });
+    } else {
+      res
+        .status(500)
+        .json({ status: 500, data: req.body, message: err.message });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+//////////////////////////////////////////////////////////////////
+const sendMail = async (req, res,next) => {
+    let email = req.body.email;
+    let message =req.body.message;
+    let subject = req.body.subject;
+    let name = req.body.name;
+
+    const mailOptionss ={
+      from: name,
+      to: email,
+      subject:subject,
+      html:`${name}<noreply><br/>${message}`
+    }
+
+
+}
+//////////////////////////////////////////////////////////////////
 module.exports = {
   getUser,
   getTenants,
@@ -938,4 +1015,6 @@ module.exports = {
   getPaymentByTenantId,
   addPayments,
   getLatePayments,
+  getRequests,
+  addRequests,
 };

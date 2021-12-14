@@ -101,6 +101,9 @@ export const Tenants = () => {
                         <Link to={`/tenants/${tenant._id}`}>
                             <Button>Modify</Button>
                         </Link>
+                        <Link to={`/tenant/Lease/${tenant._id}`}>
+                            <Button>Lease</Button>
+                        </Link>
                        
                       </Container>
                     </DivTenants>

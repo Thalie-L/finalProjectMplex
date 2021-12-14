@@ -12,9 +12,13 @@ import { Lodgings } from "./component/Lodgings";
 import { Tenants } from "./component/Tenants";
 import { TenantDetails } from "./component/TenantDetails";
 import { TenantNew } from "./component/TenantNew";
+import { TenantLease } from "./component/TenantLease";
+
 import { Profile } from "./component/Profile";
 import { Home } from "./component/Home";
 import { Payments } from "./component/Payments";
+import { Request } from "./component/Request";
+
 
 
 const App = () => {
@@ -58,6 +62,9 @@ const App = () => {
           <Route path="/tenants/tenantNew">
             <TenantNew />
           </Route>
+          <Route path="/tenant/Lease">
+            <TenantLease />
+          </Route>
           <Route path="/tenants/:tenantId">
             <TenantDetails />
           </Route>
@@ -69,7 +76,9 @@ const App = () => {
             <Payments/>
           </Route>
           <Route path="/leases"></Route>
-          <Route path="/requests"></Route>
+          <Route path="/requests">
+            <Request/>
+          </Route>
           <Route path="/screenerror"></Route>
           <Route path="/profile">
           <Profile /> 
