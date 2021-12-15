@@ -184,10 +184,17 @@ export const Sidebar = () => {
 };
 
 const Wrapper = styled.div`
+top:0;
+margin-top:80px;
   height: 100%;
   width: 250px;
   background-color: #2f4050;
   position: fixed;
+
+
+ 
+  //margin-top: 80px;
+ 
 `;
 
 const Img = styled.img`

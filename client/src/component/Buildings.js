@@ -89,8 +89,10 @@ export const Buildings = () => {
   return (
     <Wrapper>
       <Header>
+        <DivBtn>
         <Btn onClick={handleClickAdd}> Add Building</Btn>
-        <Btn>Update Building</Btn>       
+        <Btn>Update Building</Btn>    
+        </DivBtn>   
       </Header>
       {option === "ADD" && (
         <Main>
@@ -108,6 +110,9 @@ export const Buildings = () => {
 
 const Wrapper = styled.div`
   height: 830px;
+  margin-left: 250px;
+  margin-top: 80px;
+ // display: relative; 
  
 `;
 
@@ -118,21 +123,30 @@ const Header = styled.div`
   justify-content: flex-end;
   align-items: center;
   height: 5%;
-
+  position: fixed;
+  width:100%;
+  z-index:1;
   
+`;
+const DivBtn = styled.div`  
+  display: flex;
+  flex-direction: row;  
+  width: 40%;     
 `;
 
 const Btn = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  margin-right: 5%;
+  margin-right: 110px;
   &:hover {
     cursor: pointer;
   }
 `;
 
 const Main = styled.div`
-  height: 99%;
-  margin-left: 251px;
+ // height: 99%;
+ // margin-left: 251px;
+ display: flex;
+  flex-direction: row;
 `;

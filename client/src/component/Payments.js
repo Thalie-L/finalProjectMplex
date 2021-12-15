@@ -112,10 +112,12 @@ export const Payments = () => {
 
   return (
     <Wrapper>
+        <DivBtn>
       <Header>
-        <Btn onClick={handleClickViewLate}> View </Btn>
+        <Btn onClick={handleClickViewLate}> View Payments </Btn>
         <Btn onClick={handleClickAdd}>Add Payments</Btn>
       </Header>
+      </DivBtn>
       <Main>
           {tenants && role==="Admin" && option==="View" &&<div>Late payments</div>}
         {tenants && role==="Admin" && option==="View" &&
@@ -160,6 +162,8 @@ export const Payments = () => {
 const Wrapper = styled.div`
   height: 830px;
   margin-left: 250px;
+  margin-top: 80px;
+  display: absolute;  
 `;
 
 const Header = styled.div`
@@ -169,13 +173,22 @@ const Header = styled.div`
   justify-content: flex-end;
   align-items: center;
   height: 5%;
+  position: fixed;
+  width:90%;
+`;
+
+const DivBtn = styled.div`  
+  display: flex;
+  flex-direction: row;  
+  width: 40%;     
 `;
 
 const Btn = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  margin-right: 5%;
+  margin-right:110px;
+ 
   &:hover {
     cursor: pointer;
   }
@@ -184,6 +197,7 @@ const Btn = styled.button`
 const Main = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top:100px;
 `;
 
 const Info = styled.div`

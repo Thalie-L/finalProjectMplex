@@ -111,6 +111,8 @@ export const TenantNew = () => {
 };
 
 const Wrapper = styled.div`
+position: relative;
+margin-top: 120px;
   margin-left: 250px;
   width: 85%;
   height: 800px;

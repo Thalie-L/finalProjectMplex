@@ -917,7 +917,6 @@ const getLatePayments = async (req, res) => {
 //////////////////////////////////////////////////////////////////
 
 const getRequests = async (req, res) => {
- 
   try {
     // creates a new client
     const client = new MongoClient(MONGO_URI, options);
@@ -927,14 +926,40 @@ const getRequests = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-    let result = await db.collection("requests").find().toArray();
+    let users = await db.collection("users").find().toArray();
+
+    let address = await db.collection("address").find().toArray();
+
+    let requests = await db.collection("requests").find().toArray();
+    let tabRequest = [];
+   // let result = requests.map((item) => {
+      //let user = users.filter((u) => u._id === item.idUser);
+     // let addr = address.filter((a) => a._id === user.idLodging);
+    //  tabRequest.push(requests);
+    //});
+
+    for (let request of requests) {
+      let user = users.filter((u) => u._id === request.idUser);
+      
+      
+      tabRequest.push({_id:request._id,
+        date: request.date,
+        description: request.description,
+        idUser: request.idUser,
+        idOwner: request.idOwner,
+        user:user[0]}
+        );
+    }
+
+    let result = tabRequest;
+
+    console.log("Result: ",result);
+
     if (result) {
-      res
-        .status(200)
-        .json({ status: 200,data: result, message: {} });
+      res.status(200).json({ status: 200, data: result, message: {} });
     } else {
       res.status(404).json({
-        status: 404,       
+        status: 404,
         data: undefined,
         message: "Not Found",
       });
@@ -975,7 +1000,6 @@ const addRequests = async (req, res) => {
     console.log(err.stack);
   }
 };
-
 
 //////////////////////////////////////////////////////////////////
 module.exports = {

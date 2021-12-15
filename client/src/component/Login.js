@@ -43,7 +43,12 @@ export const Login = () => {
       </Icon>
       */
 const Wrapper = styled.div`
- 
+
+ position:fixed;
+ z-index:1;
+ top:0;
+
+
  height: 80px;
  width: 100%;
   display: flex;
@@ -79,13 +84,19 @@ color: white;
 `;
 
 const DivImg = styled.div `
+//add
+position:absolute;
+//display: inline-block;
+
 height: 100%;
 width: 100%;
+
 
 
 `;
 
 const Img = styled.img`
+
   width: 250px;
   height: 100%;
   border-radius: 5px;

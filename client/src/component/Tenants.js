@@ -60,9 +60,12 @@ export const Tenants = () => {
       {role === "Admin" && (
         <Wrapper>
           <Header>
+            <DivBtn>
             <Btn onClick={handleClickView}> View Tenants</Btn>
             <Btn onClick={handleClickAdd}>Add Tenants</Btn>
+            </DivBtn>
           </Header>
+         
           <Main>
             {tenants &&
               option === "View" &&
@@ -70,6 +73,7 @@ export const Tenants = () => {
                 return (
                   <>
                     <DivTenants>
+                     
                       <Container>
                         <ImageBox>
                           <ItemImage src="/person-icon.png" />
@@ -106,6 +110,7 @@ export const Tenants = () => {
                         </Link>
                        
                       </Container>
+                     
                     </DivTenants>
                   </>
                 );
@@ -151,6 +156,7 @@ export const Tenants = () => {
               </>
             )}
           </Main>
+        
         </Wrapper>
       )}
     </>
@@ -159,7 +165,10 @@ export const Tenants = () => {
 
 const Wrapper = styled.div`
   height: 830px;
+  //ajout dans tous les menu
   margin-left: 250px;
+  margin-top: 80px;
+  display: absolute;    
 `;
 
 const Header = styled.div`
@@ -168,22 +177,32 @@ const Header = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  height: 5%;
+  height: 5%;  
+  position: fixed;
+  width:100%;
+`;
+
+const DivBtn = styled.div`  
+  display: flex;
+  flex-direction: row;  
+  width: 40%;     
 `;
 
 const Btn = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  margin-right: 5%;
+  margin-right:110px;
   &:hover {
     cursor: pointer;
   }
 `;
 
-const Main = styled.div`
+
+const Main = styled.div` 
   display: flex;
   flex-direction: row;
+  //margin-top:100px;
 `;
 
 const Info = styled.div`
@@ -223,9 +242,13 @@ const Button = styled.button`
 `;
 
 const DivTenants = styled.div`
+margin-top: 100px;
   display: flex;
   flex-wrap: wrap;
+  //width: 100%;
 `;
+
+
 
 const Container = styled.div`
   display: flex;

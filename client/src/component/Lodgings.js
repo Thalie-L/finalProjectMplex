@@ -42,5 +42,7 @@ export const Lodgings = () => {
 const Wrapper = styled.div`
   height: 830px;
   margin-left: 250px;
+  margin-top: 100px;
+  display: absolute; 
 
 `;
