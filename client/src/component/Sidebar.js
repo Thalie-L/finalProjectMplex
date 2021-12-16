@@ -108,24 +108,6 @@ export const Sidebar = () => {
             </Menu>
           </NavLink>
         )}
-        <NavLink
-          to="/Leases"
-          exact
-          activeStyle={{
-            fontWeight: "bold",
-            color: "purple",
-          }}
-          style={linkStyle}
-        >
-          <Menu>
-            <Icon>
-              <BsFiles size={32} />
-            </Icon>
-            <Span>Leases</Span>
-          </Menu>
-        </NavLink>
-
-       
 
         <NavLink
           to="/payments"
@@ -184,17 +166,14 @@ export const Sidebar = () => {
 };
 
 const Wrapper = styled.div`
-top:0;
-margin-top:80px;
+  top: 80px;
+  //margin-top:250px;
   height: 100%;
   width: 250px;
   background-color: #2f4050;
   position: fixed;
 
-
- 
   //margin-top: 80px;
- 
 `;
 
 const Img = styled.img`

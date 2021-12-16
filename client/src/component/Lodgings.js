@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Map from "./Map";
-import {Picture} from "./Picture";
+import { Picture } from "./Picture";
 
 export const Lodgings = () => {
   const [lodgings, setLodgings] = useState(null);
-
 
   React.useEffect(() => {
     console.log("getting data lodgings and address");
@@ -17,7 +16,6 @@ export const Lodgings = () => {
       })
       .catch((err) => {
         console.log("Error Reading data " + err);
-        //setError(true)
       });
   }, []);
 
@@ -29,8 +27,7 @@ export const Lodgings = () => {
           return (
             <>
               <div key={lodging.key}>
-                  <Picture lodging={lodging}/>
-               
+                <Picture lodging={lodging} />
               </div>
             </>
           );
@@ -43,6 +40,5 @@ const Wrapper = styled.div`
   height: 830px;
   margin-left: 250px;
   margin-top: 100px;
-  display: absolute; 
-
+  display: absolute;
 `;

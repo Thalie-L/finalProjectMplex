@@ -23,6 +23,7 @@ const {
   getLatePayments,
   getRequests,
   addRequests,
+  getLodgingsByBuilding,
 } = require("./handlers");
 
 const path = require("path");
@@ -86,7 +87,7 @@ express()
   // get single tenant by id
   .get("/api/tenant", getTenantById)
 
-  //create a new building
+  //create a new tenant
   .post("/api/tenant/", addTenants)
 
   //update tenant informations
@@ -161,6 +162,8 @@ express()
   .post("/api/requests/", addRequests)
 
   /////////////////////////////////////////////////////////
+
+  .get("/api/building/lodgings",getLodgingsByBuilding)
 
   //sent mail about lease
   .post("/mail", (req, res, next) => {

@@ -14,14 +14,16 @@ const LogoutButton = () => {
     <Icon >         
       <FiLogOut size={32}/>
     </Icon>
+   
     </Wrapper>
+    <button onClick={() => logout({ returnTo: window.location.origin })}>
+      Log Out
+    </button>
     </>
   );
 };
 /*
-<button onClick={() => logout({ returnTo: window.location.origin })}>
-      Log Out
-    </button>
+
     */
 
 export default LogoutButton;

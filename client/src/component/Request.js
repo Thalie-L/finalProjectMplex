@@ -45,12 +45,12 @@ export const Request = () => {
   const handleClickAdd = () => {
     console.log("click add");
     setOption("Add");
-    //history.push(`/tenants/tenantNew`);
+   
   };
 
   const handleChange = (value, name) => {
     setFormData({ ...formData, [name]: value });
-    //setErrMessage("");
+    
   };
 
   const handleClick = () => {
@@ -188,7 +188,7 @@ const Main = styled.div`
 const DivRequests = styled.div`
 margin-top: 100px;
  
-  //width: 100%;
+ 
 `;
 
 const Column = styled.div`
@@ -209,7 +209,7 @@ const Info = styled.div`
   margin-left: "10px";
   border: 2px solid white;
   width: 300px;
-  //margin-right: "100px"; 
+  
 `;
 
 const Textarea = styled.textarea`

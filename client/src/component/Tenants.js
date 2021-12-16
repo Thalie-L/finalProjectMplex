@@ -41,7 +41,7 @@ export const Tenants = () => {
 
   const handleClickView = () => {
     console.log("click add");
-    setOption("View");   
+    setOption("View");
   };
 
   const handleClickAdd = () => {
@@ -61,11 +61,11 @@ export const Tenants = () => {
         <Wrapper>
           <Header>
             <DivBtn>
-            <Btn onClick={handleClickView}> View Tenants</Btn>
-            <Btn onClick={handleClickAdd}>Add Tenants</Btn>
+              <Btn onClick={handleClickView}> View Tenants</Btn>
+              <Btn onClick={handleClickAdd}>Add Tenants</Btn>
             </DivBtn>
           </Header>
-         
+
           <Main>
             {tenants &&
               option === "View" &&
@@ -73,14 +73,12 @@ export const Tenants = () => {
                 return (
                   <>
                     <DivTenants>
-                     
                       <Container>
                         <ImageBox>
                           <ItemImage src="/person-icon.png" />
                         </ImageBox>
 
                         <Data>
-                          
                           <Span>Firstname:</Span>
                           {tenant.firstName}
                         </Data>
@@ -103,14 +101,12 @@ export const Tenants = () => {
                           {tenant.email}
                         </Data>
                         <Link to={`/tenants/${tenant._id}`}>
-                            <Button>Modify</Button>
+                          <Button>Modify</Button>
                         </Link>
                         <Link to={`/tenant/Lease/${tenant._id}`}>
-                            <Button>Lease</Button>
+                          <Button>Lease</Button>
                         </Link>
-                       
                       </Container>
-                     
                     </DivTenants>
                   </>
                 );
@@ -156,7 +152,6 @@ export const Tenants = () => {
               </>
             )}
           </Main>
-        
         </Wrapper>
       )}
     </>
@@ -168,7 +163,7 @@ const Wrapper = styled.div`
   //ajout dans tous les menu
   margin-left: 250px;
   margin-top: 80px;
-  display: absolute;    
+  display: absolute;
 `;
 
 const Header = styled.div`
@@ -177,31 +172,31 @@ const Header = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  height: 5%;  
+  height: 5%;
   position: fixed;
-  width:100%;
+  width: 100%;
 `;
 
-const DivBtn = styled.div`  
+const DivBtn = styled.div`
   display: flex;
-  flex-direction: row;  
-  width: 40%;     
+  flex-direction: row;
+  width: 40%;
 `;
 
 const Btn = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  margin-right:110px;
+  margin-right: 110px;
   &:hover {
     cursor: pointer;
   }
 `;
 
-
-const Main = styled.div` 
+const Main = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   //margin-top:100px;
 `;
 
@@ -242,13 +237,11 @@ const Button = styled.button`
 `;
 
 const DivTenants = styled.div`
-margin-top: 100px;
+  margin-top: 100px;
   display: flex;
-  flex-wrap: wrap;
-  //width: 100%;
+
+  // width: 100%;
 `;
-
-
 
 const Container = styled.div`
   display: flex;

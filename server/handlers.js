@@ -195,6 +195,8 @@ const updateTenant = async (req, res) => {
 /////////////////////////////////////////////////////////
 
 const getBuildings = async (req, res) => {
+  const { idOwner } = req.query; //id equal to idOwner
+  console.log(idOwner);
   try {
     // creates a new client
     const client = new MongoClient(MONGO_URI, options);
@@ -205,7 +207,7 @@ const getBuildings = async (req, res) => {
 
     console.log("connected!");
 
-    const result = await db.collection("buildings").find().toArray();
+    const result = await db.collection("buildings").find({idOwner}).toArray();
 
     if (result) {
       res.status(201).json({ status: 201, data: result, message: {} });
@@ -312,7 +314,8 @@ const updateBuilding = async (req, res) => {
 /////////////////////////////////////////////////////////
 
 const getLodgings = async (req, res) => {
-  //const { _id } = req.query; //req.params._id;
+  //getLodgingsByBuilding
+  //const { idBuilding } = req.query; //req.params._id;
 
   try {
     // creates a new client
@@ -364,11 +367,11 @@ const getLodgings = async (req, res) => {
 const addLodgings = async (req, res) => {
   // validation of email
   //console.log("array of object lodging: ", req.body);
-  const buildiing = {
-    _id: "Building1",
-    desc: "Building in Anjou area",
+  const building = { 
+    _id: req.body.buildingName,
+    desc:req.body.buildingDesc,
     status: "active",
-    idOwner: "1000",
+    idOwner: req.body.idOwner,
   };
   const address1 = {
     _id: uuidv4(),
@@ -431,6 +434,9 @@ const addLodgings = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
+    const result = await db.collection("buildings").insertOne(building);
+
+
     const result1 = await db.collection("lodgings").insertOne(lodg1);
     const result2 = await db.collection("lodgings").insertOne(lodg2);
     const result3 = await db.collection("lodgings").insertOne(lodg3);
@@ -446,7 +452,7 @@ const addLodgings = async (req, res) => {
     const tabPictures3 = req.body.pictures3.split("\n");
     console.log(tabPictures3);
 
-    for (let pic of tabPictures2) {
+    for (let pic of tabPictures1) {
       //tabPictures1.forEach((pic) => {
       let picture = {
         _id: uuidv4(),
@@ -721,7 +727,7 @@ const addPictures = async (req, res) => {
 
 //////////////////////////////////////////////////////////////////
 const getLeaseById = async (req, res) => {
-  const { _id } = req.query; //req.params._id;
+  const { idUser } = req.query; //req.params._id;
   console.log(req.query);
 
   try {
@@ -733,12 +739,12 @@ const getLeaseById = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-    db.collection("leases").findOne({ _id }, (err, result) => {
+    db.collection("leases").findOne({ idUser }, (err, result) => {
       result
-        ? res.status(200).json({ status: 200, _id, data: result, message: {} })
+        ? res.status(200).json({ status: 200, idUser, data: result, message: {} })
         : res
             .status(404)
-            .json({ status: 404, _id, data: undefined, message: "Not Found" });
+            .json({ status: 404, idUser, data: undefined, message: "Not Found" });
       client.close();
     });
 
@@ -1002,6 +1008,60 @@ const addRequests = async (req, res) => {
 };
 
 //////////////////////////////////////////////////////////////////
+
+const getLodgingsByBuilding = async (req, res) => { 
+  const { idBuilding } = req.query; //req.params._id;
+
+  try {
+    // creates a new client
+    const client = new MongoClient(MONGO_URI, options);
+
+    // connect to the client
+    await client.connect();
+    const db = client.db("Mplex");
+    console.log("connected!");
+
+    const lodgings = await db.collection("lodgings").find({idBuilding}).toArray();
+    const addresses = await db.collection("address").find().toArray();
+    let result = [];
+
+    lodgings.forEach((lodging) => {
+      if (lodging.isAvailable === true) {
+        let address = addresses.filter((add) => add._id === lodging.idAddress);
+        let lodgingAddress = address[0];
+
+        result.push({
+          _id: lodging._id,
+          isAvailable: lodging.isAvailable,
+          type: lodging.type,
+          lodgingAddress,
+        });
+      }
+    });
+    console.log(result);
+    console.log("disconnected!");
+
+    if (result) {
+      res.status(200).json({
+        status: 200,
+        data: result,
+        message: "Lodging and adress informations ",
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result,
+        message: "Lodging error",
+      });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+
+
+
 module.exports = {
   getUser,
   getTenants,
@@ -1026,4 +1086,5 @@ module.exports = {
   getLatePayments,
   getRequests,
   addRequests,
+  getLodgingsByBuilding,
 };

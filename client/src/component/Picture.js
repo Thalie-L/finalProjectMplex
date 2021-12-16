@@ -22,9 +22,9 @@ export const Picture = ({ lodging }) => {
     <Wrapper>
       {pictures && (
         <>
-        <div> <span>Adresse: {lodging.lodgingAddress.address}, </span>
-        <span>{lodging.type}</span>
-          </div>
+        <Info> Adresse: {lodging.lodgingAddress.address}, 
+        {lodging.type}
+          </Info>
           {pictures.map((picture) => {
               return(<Img src={picture.imageUrl} />);
             })}
@@ -34,7 +34,7 @@ export const Picture = ({ lodging }) => {
     </Wrapper>
   );
 };
-// <Slideshow pictures={pictures}/>
+
 const Wrapper = styled.div`
 margin-top: 50px;
 `;
@@ -42,4 +42,10 @@ margin-top: 50px;
 const Img = styled.img`
   height: 300px;
   width: 400px;
+`;
+
+const Info = styled.div `
+font-size: 22px;
+font-weight: bold;
+margin-bottom: 10px;
 `;

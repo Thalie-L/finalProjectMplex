@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { CurrentUserContext } from "./CurrentUserContext";
 
-
 export const initialStateTenantNew = {
   firstName: "",
   lastName: "",
@@ -32,19 +31,19 @@ export const TenantNew = () => {
     formData._id = uuidv4();
     formData.role = "User";
     formData.idOwner = currentUser._id;
-      fetch("/api/tenant", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          const { status, data, message } = json;
-          console.log(status, data, message);
-        });
+    fetch("/api/tenant", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const { status, data, message } = json;
+        console.log(status, data, message);
+      });
   };
 
   return (
@@ -111,8 +110,8 @@ export const TenantNew = () => {
 };
 
 const Wrapper = styled.div`
-position: relative;
-margin-top: 120px;
+  position: relative;
+  margin-top: 120px;
   margin-left: 250px;
   width: 85%;
   height: 800px;

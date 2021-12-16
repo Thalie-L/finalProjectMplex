@@ -21,12 +21,12 @@ export const itemOptions = [
 ];
 
 export const initialStateTenant = {
-    _id: "",
-    amount:"",
-    month: "",
-    datePayment:"",
-    idUser:"",
-    cardName: "",
+  _id: "",
+  amount: "",
+  month: "",
+  datePayment: "",
+  idUser: "",
+  cardName: "",
   cardNumber: "",
   expiryDate: "",
   securityCode: "",
@@ -76,7 +76,7 @@ const Form = ({
         handleChange={handleChange}
       />
 
-<Input
+      <Input
         name="expiryDate"
         type="text"
         placeholder="expiryDate (XX XX)"

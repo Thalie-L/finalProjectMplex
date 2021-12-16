@@ -99,12 +99,11 @@ export const Payments = () => {
          .then((json) => {
            const { status, error } = json;
            if (status === "success") {
-             //setSubStatus("confirmed");
+            
              console.log("success");
            } else if (error) {
              console.log("error:", error);
-             // setSubStatus("error");
-             // setErrMessage(errorMessages[error]);
+            
            }
          });
 
@@ -148,7 +147,7 @@ export const Payments = () => {
             formData={formData}
             handleChange={handleChangeAdd}
             handleClick={handleClickAddConfirm}
-           /* disabled={disabled}*/
+          
           />
               
            

@@ -18,6 +18,7 @@ import { Profile } from "./component/Profile";
 import { Home } from "./component/Home";
 import { Payments } from "./component/Payments";
 import { Request } from "./component/Request";
+import { BuildingDetails } from "./component/BuidingDetails";
 
 
 
@@ -53,16 +54,21 @@ const App = () => {
 
         <Switch>
           <Route exact path="/"></Route>
+         
           <Route path="/buildings">
             <Buildings />
           </Route>
+          <Route path="/building/lodgings/:buildingId">
+            <BuildingDetails />
+          </Route>
+         
           <Route path="/lodgings/">
             <Lodgings />
           </Route>
           <Route path="/tenants/tenantNew">
             <TenantNew />
           </Route>
-          <Route path="/tenant/Lease">
+          <Route path="/tenant/Lease/:tenantId">
             <TenantLease />
           </Route>
           <Route path="/tenants/:tenantId">

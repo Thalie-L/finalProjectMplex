@@ -5,14 +5,11 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
 export const initialStateTenant = {
+  _id: "",
   firstName: "",
   lastName: "",
   telephone: "",
   email: "",
-  address: "",
-  province: "",
-  postcode: "",
-  country: "",
 };
 
 export const TenantDetails = () => {
@@ -38,6 +35,33 @@ export const TenantDetails = () => {
   const handleChange = (value, name) => {
     setFormData({ ...formData, [name]: value });
     //setErrMessage("");
+  };
+
+  const handleClick = () => {
+    formData._id = tenant._id;
+    console.log(formData);
+    if(formData.firstName==="")
+    { formData.firstName = tenant.firstName}
+    if(formData.lastName==="")
+    { formData.lastName = tenant.lastName}
+    if(formData.telephone==="")
+    { formData.telephone = tenant.telephone}
+    if(formData.email==="")
+    { formData.email = tenant.email}
+
+    fetch("/api/tenant", {
+      method: "PUT",
+      body: JSON.stringify(formData),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const { status, data, message } = json;
+        console.log(status, data, message);
+      });
   };
 
   return (
@@ -88,7 +112,7 @@ export const TenantDetails = () => {
               />
             </Data>
 
-            <Button>Modify</Button>
+            <Button onClick={handleClick}>Modify</Button>
           </InfoBox>
         </Container>
       )}
@@ -97,8 +121,8 @@ export const TenantDetails = () => {
 };
 
 const Wrapper = styled.div`
-position: relative;
-margin-top: 120px;
+  position: relative;
+  margin-top: 120px;
   margin-left: 250px;
   width: 85%;
   height: 800px;
@@ -110,9 +134,9 @@ const Container = styled.div`
   display: flex;
   width: 80%;
   height: 80%;
-  flex-direction: row;  
+  flex-direction: row;
   align-items: center;
-  color: white; 
+  color: white;
   background-color: rgb(194, 201, 202);
   border-radius: 5px;
   margin: 2%;

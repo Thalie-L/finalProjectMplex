@@ -13,6 +13,7 @@ export const initialStateTenantLease = {
   inclusion: "",
   rule: "",
   price: "",
+  idLodging:"",
   idUser: "",
 };
 
@@ -20,7 +21,8 @@ export const TenantLease = () => {
   const { currentUser, role } = React.useContext(CurrentUserContext);
 
   const [formData, setFormData] = useState(initialStateTenantLease);
-  const[lease,setLease]= useState();
+  const [lease, setLease] = useState(null);
+  const [tenant,setTenant]=useState(null)
   const param = useParams();
   const _id = param.tenantId;
   //console.log("id:", _id);
@@ -29,13 +31,23 @@ export const TenantLease = () => {
 
   React.useEffect(() => {
     console.log("getting tenant leases");
-    fetch(`/api/tenant/Lease?_id=${_id}`)
+    fetch(`/api/tenant?_id=${_id}`)
       .then((res) => res.json())
       .then((data) => {
-        setLease(data.data);
+        if (data.data) {
+          setTenant(data.data);
+          fetch(`/api/lease?idUser=${_id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.data) {
+              setLease(data.data);
+            }
+          });
+        }
       });
-  }, []);
 
+     
+  }, []);
 
   const handleChange = (value, name) => {
     setFormData({ ...formData, [name]: value });
@@ -43,11 +55,11 @@ export const TenantLease = () => {
   };
 
   const handleClick = () => {
-     
     formData._id = uuidv4();
-    formData.role = "User";
+   formData.idUser= tenant._id;
+  
     formData.idOwner = currentUser._id;
-    fetch("/api/tenant", {
+    fetch("/api/leases", {
       method: "POST",
       body: JSON.stringify(formData),
       headers: {
@@ -62,16 +74,14 @@ export const TenantLease = () => {
       });
   };
 
-
   const handleClickSend = () => {
-    let emailInfo ={
-        email:"thalie_l@hotmail.com",
-        message:"Message test",
-        subject:"Sujet test",
-        name:"Nathalie",
+    let emailInfo = {
+      email: tenant.email,
+      message: `<br/><Div>Date start: ${lease.dateStart}</Div><br/><Div>Date end: ${lease.dateEnd}</Div></br><Div>Inclusion: ${lease.inclusion}</Div></br><Div>Rule: ${lease.rule}</Div><Div>Price: ${lease.price}</Div>",
+      subject: "Lease confirmation`,
+      name: tenant.firstName+tenant.lastName,
+    };
 
-    }
-   
     fetch("/mail", {
       method: "POST",
       body: JSON.stringify(emailInfo),
@@ -91,115 +101,115 @@ export const TenantLease = () => {
     <Wrapper>
       <Container>
         <InfoBox>
-            {!lease &&
+          {!lease && (
             <>
-          <Data>
-            <Span>Firstname:</Span>
-            <Input
-              type="text"
-              name="firstName"
-              placeholder="First name"
-              onChange={(ev) => handleChange(ev.target.value, "firstName")}
-            />
-          </Data>
-
-          <Data>
-            <Span>Lastname:</Span>
-            <Input
-              type="text"
-              name="lastName"
-              placeholder="Last name"
-              onChange={(ev) => handleChange(ev.target.value, "lastName")}
-            />
-          </Data>
-
-          <Data>
-            <Span>Date start:</Span>
-            <Input
-              type="text"
-              name="dateStart"
-              placeholder="Date Start"
-              onChange={(ev) => handleChange(ev.target.value, "dateStart")}
-            />
-          </Data>
-
-          <Data>
-            <Span>Date end:</Span>
-            <Input
-              type="text"
-              name="dateEnd"
-              placeholder="Date end"
-              onChange={(ev) => handleChange(ev.target.value, "dateEnd")}
-            />
-          </Data>
-          <Data>
-            <Span>Inclusion:</Span>
-            <Input
-              type="text"
-              name="inclusion"
-              placeholder="Inclusion"
-              onChange={(ev) => handleChange(ev.target.value, "inclusion")}
-            />
-          </Data>
-
-          <Data>
-            <Span>Rule:</Span>
-            <Input
-              type="text"
-              name="rule"
-              placeholder="Rule"
-              onChange={(ev) => handleChange(ev.target.value, "rule")}
-            />
-          </Data>
-            <Buttons>
-          <Button onClick={handleClick}>Confirm</Button>
-          <Button onClick={handleClickSend}>Send</Button> 
-
-           <Button onClick={handleClick}>Cancel</Button>
-          </Buttons>
-          </>
-}
-
-{lease &&
-            <>
-          <Data>
-            <Span>Firstname:</Span>
-           <Span>{lease.idUser}</Span>
-          </Data>
-
-          <Data>
-            <Span>Lastname:</Span>
-            <Span>{lease.idUser}</Span>
             
-          </Data>
 
-          <Data>
-            <Span>Date start:</Span>
-           <Span>{lease.dateStart}</Span>
-          </Data>
+             
 
-          <Data>
-            <Span>Date end:</Span>
-            <Span>{lease.dateEnd}</Span>
-          </Data>
-          <Data>
-            <Span>Inclusion:</Span>
-            <Span>{lease.inclusion}</Span>
-          </Data>
+              <Data>
+                <Span>Date start:</Span>
+                <Input
+                  type="text"
+                  name="dateStart"
+                  placeholder="Date Start"
+                  onChange={(ev) => handleChange(ev.target.value, "dateStart")}
+                />
+              </Data>
 
-          <Data>
-            <Span>Rule:</Span>
-            <Span>{lease.rule}</Span>
-          </Data>
-            <Buttons>
-          <Button onClick={handleClick}>Confirm</Button> 
-          <Button onClick={handleClickSend}>Send</Button> 
-          <Button onClick={handleClick}>Cancel</Button>
-          </Buttons>
-          </>
-}
+              <Data>
+                <Span>Date end:</Span>
+                <Input
+                  type="text"
+                  name="dateEnd"
+                  placeholder="Date end"
+                  onChange={(ev) => handleChange(ev.target.value, "dateEnd")}
+                />
+              </Data>
+              <Data>
+                <Span>Inclusion:</Span>
+                <Input
+                  type="text"
+                  name="inclusion"
+                  placeholder="Inclusion"
+                  onChange={(ev) => handleChange(ev.target.value, "inclusion")}
+                />
+              </Data>
+
+              <Data>
+                <Span>Rule:</Span>
+                <Input
+                  type="text"
+                  name="rule"
+                  placeholder="Rule"
+                  onChange={(ev) => handleChange(ev.target.value, "rule")}
+                />
+              </Data>
+              <Data>
+                <Span>Price:</Span>
+                <Input
+                  type="text"
+                  name="price"
+                  placeholder="Price"
+                  onChange={(ev) => handleChange(ev.target.value, "price")}
+                />
+              </Data>
+              <Data>
+                <Span># Lodging:</Span>
+                <Input
+                  type="text"
+                  name="idLodging"
+                  placeholder="idLodging"
+                  onChange={(ev) => handleChange(ev.target.value, "idLodging")}
+                />
+              </Data>
+              <Buttons>
+                <Button onClick={handleClick}>Confirm</Button>
+                <Button onClick={handleClickSend}>Send</Button>
+
+                <Button>Cancel</Button>
+              </Buttons>
+            </>
+          )}
+
+          {lease && (
+            <>
+              
+
+              <Data>
+                <Span>Date start:</Span>
+                <Span>{lease.dateStart}</Span>
+              </Data>
+
+              <Data>
+                <Span>Date end:</Span>
+                <Span>{lease.dateEnd}</Span>
+              </Data>
+              <Data>
+                <Span>Inclusion:</Span>
+                <Span>{lease.inclusion}</Span>
+              </Data>
+
+              <Data>
+                <Span>Rule:</Span>
+                <Span>{lease.rule}</Span>
+              </Data>
+              <Data>
+                <Span>Price:</Span>
+                <Span>{lease.price}</Span>
+              </Data>
+              <Data>
+                <Span># Lodging:</Span>
+                <Span>{lease.idLodging}</Span>
+              </Data>
+              <Buttons>
+                <Button onClick={handleClick}>Confirm</Button>
+                <Button onClick={handleClickSend}>Send</Button>
+                <Button onClick={handleClick}>Cancel</Button>
+              </Buttons>
+            </>
+          )}
         </InfoBox>
-    
       </Container>
     </Wrapper>
   );
@@ -249,24 +259,31 @@ const ImageBox = styled.div`
 
 const InfoBox = styled.div`
   height: 500px;
-  width: 500px;
+  width: 700px;
   display: flex;
   flex-direction: column;
   margin-top: 10%;
+  margin-left: 50px;
+  
 `;
 
 const Span = styled.span`
   margin-right: "28px";
   font-size: 28px;
+ 
+  
+
 `;
 
 const Data = styled.div`
+  
   margin-left: "10px";
   margin-right: "8px";
   font-size: 17px;
-  width: 500px;
+  width:100%;
   margin-bottom: 5%;
   font-size: 28px;
+ 
 `;
 const Input = styled.input`
   border-radius: 5px;
@@ -281,12 +298,12 @@ const Input = styled.input`
 `;
 
 const Buttons = styled.button`
-display: flex;
+  display: flex;
 
-flex-direction: row;
-margin-left: 50px;
-background-color: transparent;
-border:none;
+  flex-direction: row;
+  margin-left: 50px;
+  background-color: transparent;
+  border: none;
 `;
 
 const Button = styled.button`
