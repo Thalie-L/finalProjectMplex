@@ -10,7 +10,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export const Login = () => {
     const { user, isAuthenticated, isLoading } = useAuth0();
-
+    console.log(user,isAuthenticated)
   return (
       <>
     <Wrapper>
@@ -45,7 +45,7 @@ export const Login = () => {
 const Wrapper = styled.div`
 
  position:fixed;
- z-index:1;
+ z-index:6;
  top:0;
 
 

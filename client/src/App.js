@@ -50,7 +50,7 @@ const App = () => {
       <GlobalStyle />
       <Router>
         <Login />       
-        {role === "Admin" && <Sidebar />}
+        {isAuthenticated && <Sidebar />}
 
         <Switch>
           <Route exact path="/"></Route>

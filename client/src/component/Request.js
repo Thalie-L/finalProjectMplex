@@ -59,7 +59,8 @@ export const Request = () => {
     formData.date = d.getFullYear().toString()+"-"+
     d.getMonth()+"-"+d.getDay().toString();
     formData.idOwner = currentUser.idOwner;
-      fetch("/api/request", {
+    formData.idUser = currentUser._id;
+      fetch("/api/requests", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
@@ -80,7 +81,7 @@ export const Request = () => {
         <Header>
             <DivBtn>
           {role==="Admin" && <Btn onClick={handleClickView}> View Requests</Btn>}
-          {role==="Admin" && <Btn onClick={handleClickAdd}>Add Requests</Btn>}
+          {role==="User" && <Btn onClick={handleClickAdd}>Add Requests</Btn>}
           </DivBtn>
         </Header>
         <Main>
@@ -116,7 +117,7 @@ export const Request = () => {
             })}
             </DivRequests>
 
-          {option === "Add" && role==="Admin" &&(
+          {option === "Add" && role==="User" &&(
             <>
                 <Container>
                 <Span>Request:</Span>

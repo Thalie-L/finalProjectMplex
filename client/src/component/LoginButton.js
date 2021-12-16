@@ -19,12 +19,14 @@ export const LoginButton = () => {
 //<button onClick={() => loginWithRedirect()}>Log In</button>
 export default LoginButton;
 
-const Wrapper = styled.div` 
+const Wrapper = styled.button` 
+z-index:4;
  width: 15%;
  display: flex;
  flex-direction: row;
  justify-content: center;
  margin-right:5%;
+ 
 
  &:hover {
     cursor: pointer;
@@ -32,7 +34,7 @@ const Wrapper = styled.div`
  
 `;
 
-const Title = styled.div `
+const Title = styled.span `
 width: 70px;
 font-size: 22px;
 margin-right: 5%;

@@ -113,13 +113,13 @@ export const Payments = () => {
     <Wrapper>
         <DivBtn>
       <Header>
-        <Btn onClick={handleClickViewLate}> View Payments </Btn>
+        {role==="Admin" && <Btn onClick={handleClickViewLate}> View Payments </Btn>}
         <Btn onClick={handleClickAdd}>Add Payments</Btn>
       </Header>
       </DivBtn>
       <Main>
           {tenants && role==="Admin" && option==="View" &&<div>Late payments</div>}
-        {tenants && role==="Admin" && option==="View" &&
+        { tenants && role==="Admin" && option==="View" &&
           tenants.map((tenant, key) => {
              
             return (
