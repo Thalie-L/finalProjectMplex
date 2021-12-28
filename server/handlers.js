@@ -106,6 +106,9 @@ const getTenantById = async (req, res) => {
 };
 
 const addTenants = async (req, res) => {
+  const _id = req.body._id;
+  const email = req.body.email;
+  let result = null;
   // validation of email
   if (!req.body.email.includes("@")) {
     return res
@@ -122,7 +125,15 @@ const addTenants = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-    const result = await db.collection("users").insertOne(req.body);
+    const emailFounded = await db.collection("users").find({ email }).toArray();
+
+    if (emailFounded.length === 0) {
+      result = await db.collection("users").insertOne(req.body);
+    } else {
+      if (emailFounded[0]._id === _id) {
+        result = await db.collection("users").insertOne(req.body);
+      }
+    }
 
     client.close();
     console.log("disconnected!");
@@ -130,11 +141,15 @@ const addTenants = async (req, res) => {
     if (result) {
       res
         .status(201)
-        .json({ status: 201, data: req.body, message: "Tenants added" });
+        .json({ status: 201, data: req.body, message: "Tenant added" });
     } else {
       res
         .status(500)
-        .json({ status: 500, data: req.body, message: err.message });
+        .json({
+          status: 500,
+          data: req.body,
+          message: "Tenant not added check email",
+        });
     }
   } catch (err) {
     console.log(err.stack);
@@ -144,7 +159,7 @@ const addTenants = async (req, res) => {
 const updateTenant = async (req, res) => {
   const _id = req.body._id;
   const email = req.body.email;
-  
+
   let result = null;
 
   const keys = Object.keys(req.body);
@@ -167,11 +182,7 @@ const updateTenant = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-   
-      const emailFounded = await db.collection("users").find({ email}).toArray();      
-      console.log(emailFounded[0]._id);
-     
-    
+    const emailFounded = await db.collection("users").find({ email }).toArray();
 
     // we are querying on the _id
     const query = { _id };
@@ -179,29 +190,23 @@ const updateTenant = async (req, res) => {
     const newValues = { $set: { ...req.body } };
     // create a document that sets the plot of the movie
 
-      if(emailFounded.length===0 )
-      {
-        result =  await db.collection("users").updateOne(query, newValues);
+    if (emailFounded.length === 0) {
+      result = await db.collection("users").updateOne(query, newValues);
+    } else {
+      console.log("inin");
+      console.log(emailFounded[0]._id);
+      console.log(_id);
 
+      if (emailFounded[0]._id === _id) {
+        console.log("in ok");
+        result = await db.collection("users").updateOne(query, newValues);
       }
-      else{
-        console.log("inin");
-        console.log(emailFounded[0]._id);
-        console.log(_id);
-      
-        if(emailFounded[0]._id===_id)
-        {
-          console.log("in ok");
-          result = await db.collection("users").updateOne(query, newValues);
+    }
+    // if(emailFounded && emailFounded[0]._id!==_id)
 
-        }
-      }
-     // if(emailFounded && emailFounded[0]._id!==_id)
-      
-  
     client.close();
     console.log("disconnected!");
-    console.log("result",result);
+    console.log("result", result);
 
     if (result) {
       res.status(200).json({
@@ -236,7 +241,7 @@ const getBuildings = async (req, res) => {
 
     console.log("connected!");
 
-    const result = await db.collection("buildings").find({idOwner}).toArray();
+    const result = await db.collection("buildings").find({ idOwner }).toArray();
 
     if (result) {
       res.status(201).json({ status: 201, data: result, message: {} });
@@ -396,9 +401,9 @@ const getLodgings = async (req, res) => {
 const addLodgings = async (req, res) => {
   // validation of email
   //console.log("array of object lodging: ", req.body);
-  const building = { 
+  const building = {
     _id: req.body.buildingName,
-    desc:req.body.buildingDesc,
+    desc: req.body.buildingDesc,
     status: "active",
     idOwner: req.body.idOwner,
   };
@@ -464,7 +469,6 @@ const addLodgings = async (req, res) => {
     console.log("connected!");
 
     const result = await db.collection("buildings").insertOne(building);
-
 
     const result1 = await db.collection("lodgings").insertOne(lodg1);
     const result2 = await db.collection("lodgings").insertOne(lodg2);
@@ -770,10 +774,17 @@ const getLeaseById = async (req, res) => {
 
     db.collection("leases").findOne({ idUser }, (err, result) => {
       result
-        ? res.status(200).json({ status: 200, idUser, data: result, message: {} })
+        ? res
+            .status(200)
+            .json({ status: 200, idUser, data: result, message: {} })
         : res
             .status(404)
-            .json({ status: 404, idUser, data: undefined, message: "Not Found" });
+            .json({
+              status: 404,
+              idUser,
+              data: undefined,
+              message: "Not Found",
+            });
       client.close();
     });
 
@@ -967,28 +978,28 @@ const getRequests = async (req, res) => {
 
     let requests = await db.collection("requests").find().toArray();
     let tabRequest = [];
-   // let result = requests.map((item) => {
-      //let user = users.filter((u) => u._id === item.idUser);
-     // let addr = address.filter((a) => a._id === user.idLodging);
+    // let result = requests.map((item) => {
+    //let user = users.filter((u) => u._id === item.idUser);
+    // let addr = address.filter((a) => a._id === user.idLodging);
     //  tabRequest.push(requests);
     //});
 
     for (let request of requests) {
       let user = users.filter((u) => u._id === request.idUser);
-      
-      
-      tabRequest.push({_id:request._id,
+
+      tabRequest.push({
+        _id: request._id,
         date: request.date,
         description: request.description,
         idUser: request.idUser,
         idOwner: request.idOwner,
-        user:user[0]}
-        );
+        user: user[0],
+      });
     }
 
     let result = tabRequest;
 
-    console.log("Result: ",result);
+    console.log("Result: ", result);
 
     if (result) {
       res.status(200).json({ status: 200, data: result, message: {} });
@@ -1038,7 +1049,7 @@ const addRequests = async (req, res) => {
 
 //////////////////////////////////////////////////////////////////
 
-const getLodgingsByBuilding = async (req, res) => { 
+const getLodgingsByBuilding = async (req, res) => {
   const { idBuilding } = req.query; //req.params._id;
 
   try {
@@ -1050,7 +1061,10 @@ const getLodgingsByBuilding = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-    const lodgings = await db.collection("lodgings").find({idBuilding}).toArray();
+    const lodgings = await db
+      .collection("lodgings")
+      .find({ idBuilding })
+      .toArray();
     const addresses = await db.collection("address").find().toArray();
     let result = [];
 
@@ -1087,9 +1101,6 @@ const getLodgingsByBuilding = async (req, res) => {
     console.log(err.stack);
   }
 };
-
-
-
 
 module.exports = {
   getUser,

@@ -198,8 +198,7 @@ const Header = styled.div`
 `;
 
 const Container = styled.div`  
-  display: flex;
-  
+  display: flex;  
   width: 80%;
   height: 80%;
   flex-direction: row;
@@ -207,11 +206,12 @@ const Container = styled.div`
   color: white;
   background-color: rgb(194, 201, 202);
   border-radius: 5px;
-  
+  //margin: 2%;
+  margin-top: 80px;
   margin-left: 5%;
 
   
-  margin-top: 5%;
+  
   
   
 `;

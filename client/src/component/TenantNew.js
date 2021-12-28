@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { CurrentUserContext } from "./CurrentUserContext";
+import { MessageBox } from "./MessageBox";
 
 export const initialStateTenantNew = {
   firstName: "",
@@ -19,8 +20,8 @@ export const TenantNew = () => {
   const { currentUser, role } = React.useContext(CurrentUserContext);
 
   const [formData, setFormData] = useState(initialStateTenantNew);
-
-  const history = useHistory();
+  const [message, setMessage] = useState("");
+  
 
   const handleChange = (value, name) => {
     setFormData({ ...formData, [name]: value });
@@ -41,20 +42,72 @@ export const TenantNew = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        const { status, data, message } = json;
+        const { status, data, message } = json;      
         console.log(status, data, message);
+        if(status===201)
+        {
+          setMessage("Tenant's added");
+          handleReset();
+        }
+        else{
+          setMessage(message)
+        }
       });
   };
 
+  const handleReset = () =>{
+   
+    Array.from(document.querySelectorAll("input")).forEach(
+      input => (input.value = "")
+    );
+
+    
+   
+  }
+
+
   return (
     <Wrapper>
+      <Header>
+      {message && <MessageBox message={message} setMessage={setMessage}/>}
+       
+      </Header>
+      <DivTenant>
       <Container>
         <ImageBox>
           <ItemImage src="/person-icon.png" />
         </ImageBox>
+        <ColumnBoxes>
+          <ColumnBox>
         <InfoBox>
           <Data>
             <Span>Firstname:</Span>
+           
+          </Data>
+
+          <Data>
+            <Span>Lastname:</Span>
+            
+          </Data>
+
+          <Data>
+            <Span>Telephone:</Span>
+           
+          </Data>
+
+          <Data>
+            <Span>Email:</Span>
+            
+          </Data>
+          <Data>
+            <Span>Id Lodging:</Span>
+           
+          </Data>
+
+        </InfoBox>
+        <InfoBox>
+          <Data>
+           
             <Input
               type="text"
               name="firstName"
@@ -64,7 +117,7 @@ export const TenantNew = () => {
           </Data>
 
           <Data>
-            <Span>Lastname:</Span>
+          
             <Input
               type="text"
               name="lastName"
@@ -74,7 +127,7 @@ export const TenantNew = () => {
           </Data>
 
           <Data>
-            <Span>Telephone:</Span>
+           
             <Input
               type="text"
               name="telephone"
@@ -84,7 +137,7 @@ export const TenantNew = () => {
           </Data>
 
           <Data>
-            <Span>Email:</Span>
+           
             <Input
               type="text"
               name="email"
@@ -93,7 +146,7 @@ export const TenantNew = () => {
             />
           </Data>
           <Data>
-            <Span>Id Lodging:</Span>
+            
             <Input
               type="text"
               name="idLodging"
@@ -102,21 +155,41 @@ export const TenantNew = () => {
             />
           </Data>
 
-          <Button onClick={handleClick}>Modify</Button>
         </InfoBox>
+        </ColumnBox>
+        <ButtonBox>
+        <Button onClick={handleClick}>Add</Button>
+
+        </ButtonBox>
+        </ColumnBoxes>
       </Container>
+      </DivTenant>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  position: relative;
-  margin-top: 120px;
+
+ height: 830px;
   margin-left: 250px;
-  width: 85%;
-  height: 800px;
+  margin-top: 80px;
+
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+`;
+
+const Header = styled.div`
+  background-color: #006bb6;
+  display: flex;
+  //flex-direction: row;
+  //justify-content: flex-end;
+  align-items: center;
+  height: 5%;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  
+ 
 `;
 
 const Container = styled.div`
@@ -128,8 +201,14 @@ const Container = styled.div`
   color: white;
   background-color: rgb(194, 201, 202);
   border-radius: 5px;
-  margin: 2%;
+  margin-top: 80px;  
   margin-left: 5%;
+`;
+
+const DivTenant = styled.div`
+  //margin-top: 100px; 
+  border: 2px solid white;
+  
 `;
 
 const ItemImage = styled.img`
@@ -138,7 +217,7 @@ const ItemImage = styled.img`
 `;
 const ImageBox = styled.div`
   margin-top: 10px;
-  width: 500px;
+  width: 60%;
 
   border: 3px solid;
   height: 500px;
@@ -148,17 +227,18 @@ const ImageBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top:20px;
   margin-left: 70px;
   margin-right: 70px;
   margin-bottom: 20px;
 `;
 
 const InfoBox = styled.div`
-  height: 500px;
-  width: 500px;
+  height: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
-  margin-top: 10%;
+  align-items:center; 
 `;
 
 const Span = styled.span`
@@ -170,9 +250,12 @@ const Data = styled.div`
   margin-left: "10px";
   margin-right: "8px";
   font-size: 17px;
-  width: 500px;
+  width: 250px;
   margin-bottom: 5%;
   font-size: 28px;
+  display: flex;
+  align-items: center;
+  height: 60px:
 `;
 const Input = styled.input`
   border-radius: 5px;
@@ -183,7 +266,7 @@ const Input = styled.input`
   font-weight: 300;
   height: 36px;
   padding: 8px 12px 10px 12px;
-  width: 50%;
+  width: 100%;
 `;
 
 const Button = styled.button`
@@ -196,4 +279,22 @@ const Button = styled.button`
   margin-top: 10px;
   font-size: 17px;
   font-weight: bold;
+`;
+
+const ColumnBoxes = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-right: 100px;   
+`;
+
+const ColumnBox = styled.div`
+  display: flex;
+  flex-direction: row;    
+`;
+
+const ButtonBox = styled.div`
+display: flex:
+flex-direction: row;
+margin: auto;  
 `;
