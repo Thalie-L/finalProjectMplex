@@ -180,14 +180,14 @@ const Header = styled.div`
 const DivBtn = styled.div`
   display: flex;
   flex-direction: row;
-  width: 40%;
+  width: 42%;
 `;
 
 const Btn = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  margin-right: 110px;
+  margin-right: 145px;
   &:hover {
     cursor: pointer;
   }

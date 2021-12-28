@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { CurrentUserContext } from "./CurrentUserContext";
 import FormPayment from "./FormPayment";
 import { v4 as uuidv4 } from "uuid";
+import { MessageBox } from "./MessageBox";
 
-export const initialStateTenant = {
+export const initialStatePayment = {
   cardName: "",
   cardNumber: "",
   expiryDate: "",
@@ -19,8 +20,9 @@ export const Payments = () => {
   const [payments, setPayments] = useState(null);
   const [tenants, setTenants] = useState(null);
   const [option, setOption] = useState("");
+  const [message, setMessage] = useState("");
 
-  const [formData, setFormData] = useState(initialStateTenant);
+  const [formData, setFormData] = useState(initialStatePayment);
   // const history = useHistory();
 
   React.useEffect(() => {
@@ -48,7 +50,7 @@ export const Payments = () => {
         .then((data) => {         
           setPayments(data.data);
           console.log(data.data);
-          setOption("View");
+          setOption("Add");
         })
         .catch((err) => {
           console.log("Error Reading data " + err);
@@ -56,7 +58,7 @@ export const Payments = () => {
         });
 
     }
-  }, []);
+  }, [currentUser]);
 
   const handleClickViewLate = () => {
     setOption("View");
@@ -79,9 +81,9 @@ export const Payments = () => {
      const date = new Date();
      const payment ={
          _id:uuidv4(),
-         amount: formData.amout,
+         amount: formData.amount,
          month: formData.month,
-         datePayment:date.getFullYear.toString()+"-"+date.getMonth.toString()+date.getDay().toString(),
+         datePayment:date.getFullYear().toString()+"-"+(date.getMonth()+1).toString()+"-"+date.getDate().toString(),
          idUser: currentUser._id
      }
    
@@ -89,7 +91,7 @@ export const Payments = () => {
      
        fetch("/api/payments/", {
          method: "POST",
-         body: JSON.stringify(formData),
+         body: JSON.stringify(payment),
          headers: {
            Accept: "application/json",
            "Content-Type": "application/json",
@@ -97,39 +99,72 @@ export const Payments = () => {
        })
          .then((res) => res.json())
          .then((json) => {
-           const { status, error } = json;
-           if (status === "success") {
-            
+           const { status,message, error } = json;
+           if (status === 201) {
+             handleReset();             
              console.log("success");
            } else if (error) {
              console.log("error:", error);
             
            }
+           setMessage(message);
          });
 
  }
 
+ const handleReset = () =>{
+  Array.from(document.querySelectorAll("input")).forEach(
+    input => (input.value = "")
+  );
+
+  document.querySelectorAll("select").forEach(option=>
+    (option[0].value ="undefined")
+    
+  )
+
+  
+
+   
+}
+
   return (
     <Wrapper>
+       <Header>
+       {message && <MessageBox message={message} setMessage={setMessage} />}
         <DivBtn>
-      <Header>
+     
         {role==="Admin" && <Btn onClick={handleClickViewLate}> View Payments </Btn>}
-        <Btn onClick={handleClickAdd}>Add Payments</Btn>
-      </Header>
+        {role==="User" &&<Btn onClick={handleClickAdd}>Add Payments</Btn>}
+     
       </DivBtn>
+      </Header>
       <Main>
-          {tenants && role==="Admin" && option==="View" &&<div>Late payments</div>}
+        <DivPayments>
+        {tenants && role==="Admin" &&
+            option === "View" &&
+        <TabHeader>
+                <Info>Late payments #</Info>
+                <Info>Name</Info>
+                <Info> Telephone</Info>               
+                </TabHeader>}
+              
+  
+
+
         { tenants && role==="Admin" && option==="View" &&
           tenants.map((tenant, key) => {
              
             return (
               <>
-                <div key={key}>
-                 {tenant.firstName}-{tenant.lastName}-{tenant.telephone}
-                </div>
+              <Container>
+                <Info>{key+1}</Info>
+                <Info>{tenant.firstName} {tenant.lastName}</Info>
+                <Info>{tenant.telephone}</Info>                
+                </Container>
               </>
             );
           })}
+            </DivPayments>
 
           {payments && role==="User" &&
           payments.map((payment, key) => {
@@ -142,7 +177,7 @@ export const Payments = () => {
             );
           })}
 
-          {option==="Add" && <div>
+          {option==="Add" && role==="User"&& <div>
           <FormPayment
             formData={formData}
             handleChange={handleChangeAdd}
@@ -161,32 +196,36 @@ export const Payments = () => {
 const Wrapper = styled.div`
   height: 830px;
   margin-left: 250px;
-  margin-top: 80px;
-  display: absolute;  
+  margin-top: 80px; 
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif; 
+
 `;
 
 const Header = styled.div`
   background-color: #006bb6;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+ // flex-direction: row;
+//  justify-content: flex-end;
   align-items: center;
   height: 5%;
   position: fixed;
-  width:90%;
+  width:100%;
+  z-index: 1;
 `;
 
-const DivBtn = styled.div`  
+const DivBtn = styled.div` 
+margin-left: auto;  
   display: flex;
   flex-direction: row;  
-  width: 40%;     
+  width: 42%;     
 `;
 
 const Btn = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  margin-right:110px;
+  margin-right:145px;
  
   &:hover {
     cursor: pointer;
@@ -196,15 +235,51 @@ const Btn = styled.button`
 const Main = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top:100px;
+  border-radius: 5px;
+`;
+
+const DivPayments = styled.div`
+margin-top: 100px;  
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  width:80%;
+`;
+
+const Span = styled.span`
+  margin-left: "10px";
+  margin-right: "8px";
+  margin: 3%;
 `;
 
 const Info = styled.div`
-  height: 100px;
-  width: 95%;
-  border-radius: 5px;
-  padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  margin-left: 30px;
+margin-left: "10px";
+  border: 2px solid white;
+  width: 500px;
+`;
+
+const Container = styled.div`
+  font-size: 28px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;  
+  color: white; //#1d4555;
+  background-color: rgb(194, 201, 202);     
+  margin-left: 5%; 
+  width: 80%;
+  height: 80%;
+`;
+
+const TabHeader = styled.div`
+  font-size: 28px;
+  display: flex; 
+  flex-direction: row;
+  width: 80%;
+  color: white; //#1d4555;
+  background-color: rgb(194, 201, 202);    
+  margin: 0;
+  margin-left: 5%;
+  border-bottom: 2 px black;   
 `;

@@ -143,6 +143,9 @@ const addTenants = async (req, res) => {
 
 const updateTenant = async (req, res) => {
   const _id = req.body._id;
+  const email = req.body.email;
+  
+  let result = null;
 
   const keys = Object.keys(req.body);
 
@@ -164,15 +167,41 @@ const updateTenant = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
+   
+      const emailFounded = await db.collection("users").find({ email}).toArray();      
+      console.log(emailFounded[0]._id);
+     
+    
+
     // we are querying on the _id
     const query = { _id };
     // contains the values that we which to
     const newValues = { $set: { ...req.body } };
     // create a document that sets the plot of the movie
 
-    const result = await db.collection("users").updateOne(query, newValues);
+      if(emailFounded.length===0 )
+      {
+        result =  await db.collection("users").updateOne(query, newValues);
+
+      }
+      else{
+        console.log("inin");
+        console.log(emailFounded[0]._id);
+        console.log(_id);
+      
+        if(emailFounded[0]._id===_id)
+        {
+          console.log("in ok");
+          result = await db.collection("users").updateOne(query, newValues);
+
+        }
+      }
+     // if(emailFounded && emailFounded[0]._id!==_id)
+      
+  
     client.close();
     console.log("disconnected!");
+    console.log("result",result);
 
     if (result) {
       res.status(200).json({
@@ -184,7 +213,7 @@ const updateTenant = async (req, res) => {
       res.status(400).json({
         status: 400,
         data: req.body,
-        message: "Tenant not updated",
+        message: "User informations not updated check email",
       });
     }
   } catch (err) {

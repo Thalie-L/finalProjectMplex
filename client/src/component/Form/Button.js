@@ -2,7 +2,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 
 const Button = ({ handleClick, disabled, subStatus }) => (
-  <Wrapper onClick={handleClick}>
+  <Wrapper disabled={disabled} onClick={handleClick}>
     {subStatus === "pending" && (
       <Loading>
         <div></div>

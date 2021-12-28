@@ -20,8 +20,6 @@ import { Payments } from "./component/Payments";
 import { Request } from "./component/Request";
 import { BuildingDetails } from "./component/BuidingDetails";
 
-
-
 const App = () => {
   const { user, isAuthenticated, isLoading } = useAuth0();
 
@@ -49,19 +47,20 @@ const App = () => {
     <>
       <GlobalStyle />
       <Router>
-        <Login />       
+        <Login />
         {isAuthenticated && <Sidebar />}
+        {/*<Sidebar />*/}
 
         <Switch>
           <Route exact path="/"></Route>
-         
+
           <Route path="/buildings">
             <Buildings />
           </Route>
           <Route path="/building/lodgings/:buildingId">
             <BuildingDetails />
           </Route>
-         
+
           <Route path="/lodgings/">
             <Lodgings />
           </Route>
@@ -74,20 +73,20 @@ const App = () => {
           <Route path="/tenants/:tenantId">
             <TenantDetails />
           </Route>
-            
+
           <Route path="/tenants">
             <Tenants />
-          </Route>         
+          </Route>
           <Route path="/payments">
-            <Payments/>
+            <Payments />
           </Route>
           <Route path="/leases"></Route>
           <Route path="/requests">
-            <Request/>
+            <Request />
           </Route>
           <Route path="/screenerror"></Route>
           <Route path="/profile">
-          <Profile /> 
+            <Profile />
           </Route>
         </Switch>
       </Router>

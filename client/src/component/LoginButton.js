@@ -19,7 +19,7 @@ export const LoginButton = () => {
 //<button onClick={() => loginWithRedirect()}>Log In</button>
 export default LoginButton;
 
-const Wrapper = styled.button` 
+const Wrapper = styled.div` 
 z-index:4;
  width: 15%;
  display: flex;
@@ -34,7 +34,7 @@ z-index:4;
  
 `;
 
-const Title = styled.span `
+const Title = styled.div `
 width: 70px;
 font-size: 22px;
 margin-right: 5%;

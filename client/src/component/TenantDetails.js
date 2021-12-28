@@ -4,6 +4,8 @@ import { useParams } from "react-router";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
+import { MessageBox } from "./MessageBox";
+
 export const initialStateTenant = {
   _id: "",
   firstName: "",
@@ -17,6 +19,7 @@ export const TenantDetails = () => {
   const param = useParams();
   const _id = param.tenantId;
   console.log("id:", _id);
+  const [message, setMessage] = useState("");
 
   const [formData, setFormData] = useState(initialStateTenant);
 
@@ -29,6 +32,7 @@ export const TenantDetails = () => {
       .then((res) => res.json())
       .then((data) => {
         setTenant(data.data);
+        console.log("Tenant:",data.data);
       });
   }, []);
 
@@ -38,6 +42,7 @@ export const TenantDetails = () => {
   };
 
   const handleClick = () => {
+    
     formData._id = tenant._id;
     console.log(formData);
     if(formData.firstName==="")
@@ -48,6 +53,12 @@ export const TenantDetails = () => {
     { formData.telephone = tenant.telephone}
     if(formData.email==="")
     { formData.email = tenant.email}
+
+    if(formData.email.indexOf("@")===-1)
+    {
+      setMessage("Email must contains @ !!!");
+    }
+    else{
 
     fetch("/api/tenant", {
       method: "PUT",
@@ -61,19 +72,58 @@ export const TenantDetails = () => {
       .then((json) => {
         const { status, data, message } = json;
         console.log(status, data, message);
+        if(status===204)
+        {
+          setMessage("Profile informations updated");
+        }
+        else{
+          setMessage(message)
+        }
+        
       });
+
+
+
+    }
   };
 
   return (
     <Wrapper>
+      <Header>
+      {message && <MessageBox message={message} setMessage={setMessage}/>}
+       
+      </Header>
       {tenant && (
+        <>
+         <DivTenant>
         <Container>
+         
           <ImageBox>
             <ItemImage src="/person-icon.png" />
           </ImageBox>
+          <ColumnBoxes>
+          <ColumnBox>
           <InfoBox>
             <Data>
-              <Span>Firstname:</Span>
+              <Span>Firstname:</Span>              
+            </Data>
+
+            <Data>
+              <Span>Lastname:</Span>              
+            </Data>
+
+            <Data>
+              <Span>Telephone:</Span>             
+            </Data>
+
+            <Data>
+              <Span>Email:</Span>              
+            </Data>
+           
+          </InfoBox>
+
+          <InfoBox>
+            <Data>             
               <Input
                 type="text"
                 name="firstName"
@@ -82,8 +132,7 @@ export const TenantDetails = () => {
               />
             </Data>
 
-            <Data>
-              <Span>Lastname:</Span>
+            <Data>             
               <Input
                 type="text"
                 name="lastName"
@@ -92,8 +141,7 @@ export const TenantDetails = () => {
               />
             </Data>
 
-            <Data>
-              <Span>Telephone:</Span>
+            <Data>            
               <Input
                 type="text"
                 name="telephone"
@@ -102,8 +150,7 @@ export const TenantDetails = () => {
               />
             </Data>
 
-            <Data>
-              <Span>Email:</Span>
+            <Data>            
               <Input
                 type="text"
                 name="email"
@@ -112,26 +159,47 @@ export const TenantDetails = () => {
               />
             </Data>
 
-            <Button onClick={handleClick}>Modify</Button>
+           
           </InfoBox>
+          </ColumnBox>
+          <ButtonBox>
+          <Button onClick={handleClick}>Modify</Button>
+          </ButtonBox>
+          </ColumnBoxes>
+         
         </Container>
+        </DivTenant>
+         </>
       )}
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  position: relative;
-  margin-top: 120px;
+   height: 830px;
   margin-left: 250px;
-  width: 85%;
-  height: 800px;
+  margin-top: 80px;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 `;
 
-const Container = styled.div`
+const Header = styled.div`
+  background-color: #006bb6;
   display: flex;
+  //flex-direction: row;
+  //justify-content: flex-end;
+  align-items: center;
+  height: 5%;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  
+ 
+`;
+
+const Container = styled.div`  
+  display: flex;
+  
   width: 80%;
   height: 80%;
   flex-direction: row;
@@ -139,8 +207,19 @@ const Container = styled.div`
   color: white;
   background-color: rgb(194, 201, 202);
   border-radius: 5px;
-  margin: 2%;
+  
   margin-left: 5%;
+
+  
+  margin-top: 5%;
+  
+  
+`;
+
+const DivTenant = styled.div`
+  //margin-top: 100px;
+  border: 2px solid white;
+  
 `;
 
 const ItemImage = styled.img`
@@ -149,7 +228,7 @@ const ItemImage = styled.img`
 `;
 const ImageBox = styled.div`
   margin-top: 10px;
-  width: 500px;
+  width: 60%;
 
   border: 3px solid;
   height: 500px;
@@ -159,17 +238,18 @@ const ImageBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top:20px;
   margin-left: 70px;
   margin-right: 70px;
   margin-bottom: 20px;
 `;
 
 const InfoBox = styled.div`
-  height: 500px;
-  width: 500px;
+  height: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
-  margin-top: 10%;
+  align-items:center; 
 `;
 
 const Span = styled.span`
@@ -181,9 +261,12 @@ const Data = styled.div`
   margin-left: "10px";
   margin-right: "8px";
   font-size: 17px;
-  width: 500px;
+  width: 250px;
   margin-bottom: 5%;
   font-size: 28px;
+  display: flex;
+  align-items: center;
+  height: 60px:
 `;
 const Input = styled.input`
   border-radius: 5px;
@@ -194,7 +277,7 @@ const Input = styled.input`
   font-weight: 300;
   height: 36px;
   padding: 8px 12px 10px 12px;
-  width: 50%;
+  width: 100%;
 `;
 
 const Button = styled.button`
@@ -207,4 +290,22 @@ const Button = styled.button`
   margin-top: 10px;
   font-size: 17px;
   font-weight: bold;
+`;
+
+const ColumnBoxes = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-right: 100px;   
+`;
+
+const ColumnBox = styled.div`
+  display: flex;
+  flex-direction: row;    
+`;
+
+const ButtonBox = styled.div`
+display: flex:
+flex-direction: row;
+margin: auto;  
 `;
