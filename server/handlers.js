@@ -372,7 +372,8 @@ const getLodgings = async (req, res) => {
           type: lodging.type,
           lodgingAddress,
         });
-      }
+       } 
+      
     
     });
 
@@ -1080,7 +1081,7 @@ const getLodgingsByBuilding = async (req, res) => {
     let result = [];
 
     lodgings.forEach((lodging) => {
-      if (lodging.isAvailable === true) {
+     // if (lodging.isAvailable === true) {
         let address = addresses.filter((add) => add._id === lodging.idAddress);
         let lodgingAddress = address[0];
 
@@ -1090,7 +1091,7 @@ const getLodgingsByBuilding = async (req, res) => {
           type: lodging.type,
           lodgingAddress,
         });
-      }
+     // }
     });
     console.log(result);
     console.log("disconnected!");

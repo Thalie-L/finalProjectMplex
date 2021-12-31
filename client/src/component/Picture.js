@@ -9,6 +9,8 @@ export const Picture = ({ lodging }) => {
   const { currentUser, setCurrentUser, role, setRole } =
 React.useContext(CurrentUserContext);
 
+
+
   React.useEffect(() => {
     console.log("getting data pictures");
     fetch(`/api/pictures?idLodging=${lodging._id}`)
@@ -16,7 +18,7 @@ React.useContext(CurrentUserContext);
       .then((data) => {
         console.log(data);
         setPictures(data.data);
-        console.log("lodgings: ",data.data);
+        console.log("lodgings: ",lodging.lodgingAddress.address);
       })
       .catch((err) => {
         console.log("Error Reading data " + err);
@@ -25,11 +27,11 @@ React.useContext(CurrentUserContext);
   }, []);
   return (
     <Wrapper>
-      {pictures && (
+      {pictures && lodging.lodgingAddress.address && (
         <>
         <Info>  Adresse: {lodging.lodgingAddress.address}, {lodging.type} - 
         {role==="Admin" && <> Id: {lodging._id}, isAvailable: {lodging.isAvailable && "Yes"} {!lodging.isAvailable && "No"}</>}
-          </Info>
+        </Info>
           {pictures.map((picture) => {
               return(<Img src={picture.imageUrl} />);
             })}

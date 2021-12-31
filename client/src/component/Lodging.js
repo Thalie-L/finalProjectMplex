@@ -7,7 +7,7 @@ export const initialStateBuildingDetail = {
   isAvailable: "",
 };
 
-export const Lodging = ({ lodging }) => {
+export const Lodging = ({ lodging, setMessage }) => {
   const [formData, setFormData] = useState(initialStateBuildingDetail);
 
   console.log(lodging);
@@ -31,6 +31,7 @@ export const Lodging = ({ lodging }) => {
       .then((json) => {
         const { status, data, message } = json;
         console.log(status, data, message);
+        setMessage("Lodging updated");
       });
   };
   return (
