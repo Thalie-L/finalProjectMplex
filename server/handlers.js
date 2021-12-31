@@ -129,11 +129,7 @@ const addTenants = async (req, res) => {
 
     if (emailFounded.length === 0) {
       result = await db.collection("users").insertOne(req.body);
-    } else {
-      if (emailFounded[0]._id === _id) {
-        result = await db.collection("users").insertOne(req.body);
-      }
-    }
+    } 
 
     client.close();
     console.log("disconnected!");
@@ -193,7 +189,7 @@ const updateTenant = async (req, res) => {
     if (emailFounded.length === 0) {
       result = await db.collection("users").updateOne(query, newValues);
     } else {
-      console.log("inin");
+      
       console.log(emailFounded[0]._id);
       console.log(_id);
 
@@ -365,6 +361,7 @@ const getLodgings = async (req, res) => {
     let result = [];
 
     lodgings.forEach((lodging) => {
+     
       if (lodging.isAvailable === true) {
         let address = addresses.filter((add) => add._id === lodging.idAddress);
         let lodgingAddress = address[0];
@@ -376,6 +373,7 @@ const getLodgings = async (req, res) => {
           lodgingAddress,
         });
       }
+    
     });
 
     console.log("disconnected!");
@@ -399,6 +397,9 @@ const getLodgings = async (req, res) => {
 };
 
 const addLodgings = async (req, res) => {
+  const _id = req.body.buildingName;
+  let result,result1,result2,result3 = null;
+
   // validation of email
   //console.log("array of object lodging: ", req.body);
   const building = {
@@ -423,7 +424,7 @@ const addLodgings = async (req, res) => {
     province: req.body.province2,
     postcode: req.body.postcode2,
   };
-  console.log("Adresse 1: ", address2);
+  console.log("Adresse 2: ", address2);
 
   const address3 = {
     _id: uuidv4(),
@@ -432,7 +433,7 @@ const addLodgings = async (req, res) => {
     province: req.body.province3,
     postcode: req.body.postcode3,
   };
-  console.log("Adresse 1: ", address3);
+  console.log("Adresse 3: ", address3);
 
   const lodg1 = {
     _id: uuidv4(),
@@ -468,11 +469,20 @@ const addLodgings = async (req, res) => {
     const db = client.db("Mplex");
     console.log("connected!");
 
-    const result = await db.collection("buildings").insertOne(building);
+    //check if building name already exist
+    const buildingFounded = await db.collection("buildings").find({ _id}).toArray();
+    console.log("Founded",buildingFounded);
 
-    const result1 = await db.collection("lodgings").insertOne(lodg1);
-    const result2 = await db.collection("lodgings").insertOne(lodg2);
-    const result3 = await db.collection("lodgings").insertOne(lodg3);
+    if (buildingFounded.length === 0) {
+      
+    
+
+
+    result = await db.collection("buildings").insertOne(building);
+
+    result1 = await db.collection("lodgings").insertOne(lodg1);
+    result2 = await db.collection("lodgings").insertOne(lodg2);
+    result3 = await db.collection("lodgings").insertOne(lodg3);
 
     const result4 = await db.collection("address").insertOne(address1);
     const result5 = await db.collection("address").insertOne(address2);
@@ -517,18 +527,19 @@ const addLodgings = async (req, res) => {
       let resultpic = await db.collection("pictures").insertOne(picture);
       //});
     }
+  }
 
     client.close();
     console.log("disconnected!");
 
-    if (result1 && result2 && result3) {
+    if (result && result1 && result2 && result3) {
       res
         .status(201)
         .json({ status: 201, data: req.body, message: "Lodgings added" });
     } else {
       res
         .status(500)
-        .json({ status: 500, data: req.body, message: err.message });
+        .json({ status: 500, data: req.body, message: "Building not added - check building name" });
     }
   } catch (err) {
     console.log(err.stack);

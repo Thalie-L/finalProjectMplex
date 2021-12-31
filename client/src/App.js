@@ -35,6 +35,7 @@ const App = () => {
           console.log(data.data);
           setCurrentUser(data.data);
           setRole(data.data.role);
+          sessionStorage.setItem('currentUser', data.data._id);
         })
         .catch((err) => {
           console.log("Error Reading data " + err);

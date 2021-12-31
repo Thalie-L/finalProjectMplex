@@ -43,8 +43,26 @@ export const Buildings = () => {
     React.useContext(CurrentUserContext);
 
   React.useEffect(() => {
-    console.log("getting data request");
-    //getCurrentUser from session
+    console.log("getting data building");
+    if(!currentUser)
+    {
+      console.log(sessionStorage.getItem("currentUser"));
+      fetch(`/api/buildings?idOwner=${sessionStorage.getItem("currentUser")}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setBuildings(data.data);
+        setOption("Add");
+      })
+      .catch((err) => {
+        console.log("Error Reading data " + err);
+      });
+      
+      
+      
+    }
+    if(currentUser)
+    {
     fetch(`/api/buildings?idOwner=${currentUser._id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -55,6 +73,7 @@ export const Buildings = () => {
       .catch((err) => {
         console.log("Error Reading data " + err);
       });
+    }
   }, []);
 
   React.useEffect(() => {
@@ -97,7 +116,7 @@ export const Buildings = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        const { status, error } = json;
+        const { status, error,message } = json;
 
         console.log(status);  
        
@@ -105,15 +124,17 @@ export const Buildings = () => {
         if (status === 201) {
           console.log("success");
           setMessage("Last building added: "+formData.buildingName);
+          handleReset();
+          setDisabled(true);
         } else {
           console.log("error:", error);
-          setMessage(error);
+          setMessage(message);
         }
        
       });
 
     //RESET ALL FIELDS   
-    handleReset();
+   
 
 
   };

@@ -42,7 +42,7 @@ export const Request = () => {
         console.log("Error Reading data " + err);
         //setError(true);
       });
-  }, []);
+  }, [role]);
 
   const handleClickView = () => {
     console.log("click add");

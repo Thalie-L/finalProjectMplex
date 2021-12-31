@@ -34,7 +34,8 @@ export const BuildingDetails = () => {
 };
 
 const Wrapper = styled.div`
-  position: relative;
+ display: flex;
+ //flex-wrap: wrap;
   margin-top: 120px;
   margin-left: 250px;
   width: 30%;

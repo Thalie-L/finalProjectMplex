@@ -58,7 +58,7 @@ export const Payments = () => {
         });
 
     }
-  }, [currentUser]);
+  }, [currentUser,role]);
 
   const handleClickViewLate = () => {
     setOption("View");

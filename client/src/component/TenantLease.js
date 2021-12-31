@@ -84,9 +84,9 @@ export const TenantLease = () => {
   const handleClickSend = () => {
     let emailInfo = {
       email: tenant.email,
-      message: `<br/><Div>Date start: ${lease.dateStart}</Div><br/><Div>Date end: ${lease.dateEnd}</Div></br><Div>Inclusion: ${lease.inclusion}</Div></br><Div>Rule: ${lease.rule}</Div><Div>Price: ${lease.price}</Div>",
-      subject: "Lease confirmation`,
-      name: tenant.firstName + tenant.lastName,
+      name: tenant.firstName +" "+ tenant.lastName,
+      subject: `Lease confirmation`,
+      message: `<br/><Div>Date start: ${lease.dateStart}</Div><br/><Div>Date end: ${lease.dateEnd}</Div></br><Div>Inclusion: ${lease.inclusion}</Div></br><Div>Rule: ${lease.rule}</Div><br/><Div>Price: ${lease.price}$</Div>`          
     };
 
     fetch("/mail", {
@@ -101,7 +101,13 @@ export const TenantLease = () => {
       .then((json) => {
         const { status, data, message } = json;
         console.log(status, data, message);
-        setMessage("Lease has been send by email");             
+        if(status===200){
+          setMessage("Lease has been send by email"); 
+        }
+        else{
+          setMessage(message);
+        }
+                    
       });
   };
 
@@ -234,34 +240,67 @@ export const TenantLease = () => {
               <ColumnBoxes>
                <ColumnBox>
                 <InfoBox>
+                <Data>
+                    <Span>Name:</Span>                 
+                  </Data>
                   <Data>
-                    <Span>Date start:</Span>
-                    <Span>{lease.dateStart}</Span>
+                    <Span>Date start:</Span>                 
                   </Data>
 
                   <Data>
                     <Span>Date end:</Span>
-                    <Span>{lease.dateEnd}</Span>
+                  
                   </Data>
                   <Data>
                     <Span>Inclusion:</Span>
-                    <Span>{lease.inclusion}</Span>
+                  
                   </Data>
 
                   <Data>
                     <Span>Rule:</Span>
-                    <Span>{lease.rule}</Span>
+                  
                   </Data>
                   <Data>
                     <Span>Price:</Span>
-                    <Span>{lease.price}$</Span>
+                 
                   </Data>
                   <Data>
                     <Span># Lodging:</Span>
-                    <Span>{lease.idLodging}</Span>
+                
                   </Data>
                
                 </InfoBox>
+                <InfoBoxRight>
+                <Data>                
+                    <Span>{name}</Span>
+                  </Data>
+                  <Data>                
+                    <Span>{lease.dateStart}</Span>
+                  </Data>
+
+                  <Data>
+                   
+                    <Span>{lease.dateEnd}</Span>
+                  </Data>
+                  <Data>
+                  
+                    <Span>{lease.inclusion}</Span>
+                  </Data>
+
+                  <Data>
+                  
+                    <Span>{lease.rule}</Span>
+                  </Data>
+                  <Data>
+                  
+                    <Span>{lease.price}$</Span>
+                  </Data>
+                  <Data>
+                  
+                    <SpanId>{lease.idLodging}</SpanId>
+                  </Data>
+               
+                </InfoBoxRight>
                 </ColumnBox>
           <ButtonBox>
             <Buttons>
@@ -336,6 +375,12 @@ const InfoBoxRight = styled.div`
 const Span = styled.span`
   margin-right: "18px";
   font-size: 28px;
+  height:100%;
+`;
+
+const SpanId = styled.span`
+  margin-right: "18px";
+  font-size: 23px;
   height:100%;
 `;
 
